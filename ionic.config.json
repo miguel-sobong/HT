@@ -1,5 +1,7 @@
 {
   "name": "HailTrike",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

@@ -1,6 +1,6 @@
 <ion-app>
   <ion-split-pane>
-    <ion-menu>
+    <ion-menu *ngIf="isLoggedIn">
       <ion-header>
         <ion-toolbar>
           <ion-title>Menu</ion-title>
@@ -16,6 +16,13 @@
               </ion-label>
             </ion-item>
           </ion-menu-toggle>
+
+          <ion-item (tap)="logout()" auto-hide="true" >
+            <ion-icon slot="start" name="return-left"></ion-icon>
+            <ion-label>
+              Logout
+            </ion-label>
+          </ion-item>
         </ion-list>
       </ion-content>
     </ion-menu>

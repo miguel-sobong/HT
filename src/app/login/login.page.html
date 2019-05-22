@@ -1,0 +1,25 @@
+<ion-header class="ion-margin-bottom">
+    <ion-toolbar>
+        <ion-title>HailTrike</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-avatar>
+        <img src="assets/imgs/logo.png" alt="HailTrike logo">
+    </ion-avatar>
+    <form [formGroup]="loginForm" (ngSubmit)="logIn()">
+        <ion-item>
+            <ion-label position="floating">Email</ion-label>
+            <ion-input type="text" formControlName="email"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label position="floating">Password</ion-label>
+            <ion-input type="password" formControlName="password"></ion-input>
+        </ion-item>
+        <ion-button expand="block" type="submit" [disabled]="loginForm.invalid">Login</ion-button>
+    </form>
+
+    <p text-center c>Don't have an account? Register here</p>
+    <ion-button expand="block" type="button" (tap)="goToRegisterPage()">Register</ion-button>
+</ion-content>
