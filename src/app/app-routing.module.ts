@@ -9,6 +9,15 @@ const routes: Routes = [
     loadChildren: './login/login.module#LoginPageModule'
   },
   {
+    path: 'register',
+    loadChildren: './register/register.module#RegisterPageModule'
+  },
+  {
+    path: 'map',
+    loadChildren: './map/map.module#MapPageModule',
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'home',
     loadChildren: './home/home.module#HomePageModule',
     canActivate: [AuthGuard],
@@ -18,7 +27,11 @@ const routes: Routes = [
     loadChildren: './list/list.module#ListPageModule',
     canActivate: [AuthGuard],
   },
-  { path: 'register', loadChildren: './register/register.module#RegisterPageModule' }
+  {
+    path: 'profile',
+    loadChildren: './profile/profile.module#ProfilePageModule',
+    canActivate: [AuthGuard],
+  }
 ];
 
 @NgModule({

@@ -13,14 +13,19 @@ export class AppComponent {
   isLoggedIn = false;
   public appPages = [
     {
+      title: 'Map',
+      url: '/map',
+      icon: 'map',
+    },
+    {
       title: 'Home',
       url: '/home',
       icon: 'home'
     },
     {
-      title: 'List',
-      url: '/list',
-      icon: 'list'
+      title: 'Profile', 
+      url: '/profile',
+      icon: 'contact'
     }
   ];
 
@@ -46,7 +51,7 @@ export class AppComponent {
   checkIfLoggedIn() {
     this.authService.authenticated().subscribe(user => {
       if (user) {
-        this.navController.navigateRoot('/home');
+        this.navController.navigateRoot('/map');
         this.isLoggedIn = true;
       } else {
         this.navController.navigateRoot('/login');

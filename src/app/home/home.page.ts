@@ -1,4 +1,6 @@
+import { NavController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../core/services/user/user.service';
 
 @Component({
   selector: 'app-home',
@@ -6,10 +8,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
-
-  constructor() { }
+  addTrip = false;
+  constructor(private userService: UserService, private navController: NavController) { }
 
   ngOnInit() {
+  }
+
+  goToMapPage() {
+    this.navController.navigateForward('map');
   }
 
 }

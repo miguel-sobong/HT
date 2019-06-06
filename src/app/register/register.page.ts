@@ -35,6 +35,6 @@ export class RegisterPage implements OnInit {
   }
 
   register() {
-    this.userService.createUser(this.registerForm.value);
+    this.userService.createCommuter(this.registerForm.value);
   }
 }

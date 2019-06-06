@@ -7,7 +7,7 @@ import { ToastOptions } from '@ionic/core';
 })
 export class ToastService {
 
-  constructor(private toast: ToastController, private toastCtrl: ToastController) { }
+  constructor(private toast: ToastController) { }
 
   success(message) {
     const options: ToastOptions = {
