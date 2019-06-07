@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { Platform, NavController, MenuController } from '@ionic/angular';
+import { Platform, NavController, MenuController, AlertController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthService } from './core/services/auth/auth.service';
@@ -10,7 +10,7 @@ import { AuthService } from './core/services/auth/auth.service';
 })
 export class AppComponent {
 
-  isLoggedIn = false;
+  isLoggedIn;
   public appPages = [
     {
       title: 'Map',
@@ -23,9 +23,14 @@ export class AppComponent {
       icon: 'home'
     },
     {
-      title: 'Profile', 
+      title: 'Profile',
       url: '/profile',
       icon: 'contact'
+    },
+    {
+      title: 'About',
+      url: '/about',
+      icon: 'information-circle'
     }
   ];
 
@@ -34,7 +39,8 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar, private authService: AuthService,
     private navController: NavController,
-    private menuController: MenuController
+    private menuController: MenuController,
+    private alertController: AlertController
   ) {
     this.initializeApp();
   }
@@ -60,9 +66,25 @@ export class AppComponent {
     });
   }
 
-  logout() {
-    this.authService.logout().then(() => {
-      this.menuController.close();
+  async logout() {
+    const alert = await this.alertController.create({
+      header: 'Confirm Logout',
+      message: 'Do you want to logout?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            this.authService.logout().then(() => {
+              this.menuController.close();
+            });
+          }
+        }
+      ]
     });
+    return await alert.present();
   }
 }

@@ -21,7 +21,7 @@ export class UserService {
       });
     });
   }
-  createOnAngularFireDb(form: IRegisterForm, userId) {
+  createOnAngularFireDb(form: IRegisterForm, userId: string) {
     return this.afd.object(`users/${userId}`).set({
       firstName: form.firstName,
       lastName: form.lastName,
@@ -54,7 +54,7 @@ export class UserService {
     });
   }
 
-  getUser(userId: number) {
-    return this.afd.object(`users/${userId}`);
+  async getUser(userId: string) {
+    return await this.afd.object(`users/${userId}`).valueChanges();
   }
 }

@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Maps
+    </ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar placeholder="Search a place" (ionInput)="searchMap($event)" #searchbar></ion-searchbar>
+    <ion-list [hidden]="searchResults.length === 0">
+      <ion-item *ngFor="let item of searchResults" tappable (click)="goToLocation(item.place_id)">
+        {{ item.description }}
+      </ion-item>
+    </ion-list>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="noScroll">
+  <div id="map" #map>
+  </div>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button [disabled]="!(startMarker.internalPosition && endMarker.internalPosition)" (click)="addTravel()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
+<ion-footer>
+
+</ion-footer>
