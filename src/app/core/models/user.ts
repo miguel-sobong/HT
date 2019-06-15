@@ -5,6 +5,6 @@ export class User {
     lastName: string;
 }
 
-export class Commuter {
+export class Commuter extends User {
     mobileNumber: string;
 }

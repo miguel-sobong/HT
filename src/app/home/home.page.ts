@@ -7,12 +7,9 @@ import { UserService } from '../core/services/user/user.service';
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
-export class HomePage implements OnInit {
+export class HomePage{
   addTrip = false;
   constructor(private userService: UserService, private navController: NavController) { }
-
-  ngOnInit() {
-  }
 
   goToMapPage() {
     this.navController.navigateForward('map');

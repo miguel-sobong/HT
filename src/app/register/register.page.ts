@@ -8,15 +8,16 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
 })
-export class RegisterPage implements OnInit {
+export class RegisterPage {
 
   registerForm: FormGroup;
 
   constructor(private userService: UserService, private formbuilder: FormBuilder, private authService: AuthService) { }
 
-  ngOnInit() {
+  ionViewWillEnter() {
     this.initForm();
   }
+
   initForm() {
     this.registerForm = this.formbuilder.group({
       email: ['', [Validators.email, Validators.required]],

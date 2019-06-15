@@ -8,14 +8,16 @@ import { AuthService } from '../core/services/auth/auth.service';
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
-export class LoginPage implements OnInit {
+export class LoginPage {
 
   constructor(private formBuilder: FormBuilder, private navController: NavController, private authService: AuthService) { }
 
   loginForm: FormGroup;
-  ngOnInit() {
+
+  ionViewWillEnter() {
     this.initForm();
   }
+
   initForm() {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],

@@ -1,6 +1,7 @@
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Injectable } from '@angular/core';
+import * as firebase from 'firebase';
 import { ToastService } from '../toast/toast.service';
 import { IRegisterForm } from '../../interfaces/IRegisterForm';
 
@@ -8,10 +9,11 @@ import { IRegisterForm } from '../../interfaces/IRegisterForm';
   providedIn: 'root'
 })
 export class UserService {
+  user: any;
   constructor(
     private afa: AngularFireAuth,
     private afd: AngularFireDatabase,
-    private toast: ToastService
+    private toast: ToastService,
   ) { }
 
   createCommuter(form: IRegisterForm) {
@@ -54,7 +56,14 @@ export class UserService {
     });
   }
 
+  logoutUser() {
+    this.user = null;
+    return this.user;
+  }
+
   async getUser(userId: string) {
-    return await this.afd.object(`users/${userId}`).valueChanges();
+    return await firebase.database().ref(`users/${userId}`).once('value').then(user => {
+      return Promise.resolve({ ...user.val(), id: userId });
+    });
   }
 }

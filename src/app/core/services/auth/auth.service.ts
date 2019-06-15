@@ -1,3 +1,4 @@
+import { UserService } from './../user/user.service';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ILoginForm } from '../../interfaces/ILoginForm';
@@ -8,9 +9,9 @@ import { ToastService } from '../toast/toast.service';
 })
 export class AuthService {
 
-  constructor(private afa: AngularFireAuth, private toast: ToastService) {}
+  constructor(private afa: AngularFireAuth, private toast: ToastService, private userService: UserService) { }
 
-  async getCurrentUser() {
+  getCurrentUser() {
     return this.afa.auth.currentUser;
   }
 
@@ -27,10 +28,13 @@ export class AuthService {
   }
 
   logout() {
-    return this.afa.auth.signOut().then(user => {
-      return Promise.resolve(user);
-    }).catch(error => {
-      return Promise.reject(error);
+    return Promise.all([
+      this.afa.auth.signOut(),
+      this.userService.logoutUser()
+    ]).then(() => {
+      return Promise.resolve();
+    }).catch(() => {
+      return Promise.reject();
     });
   }
 

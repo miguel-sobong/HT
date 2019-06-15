@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: 'list.page.html',
   styleUrls: ['list.page.scss']
 })
-export class ListPage implements OnInit {
+export class ListPage {
   private selectedItem: any;
   private icons = [
     'flask',
@@ -28,9 +28,6 @@ export class ListPage implements OnInit {
         icon: this.icons[Math.floor(Math.random() * this.icons.length)]
       });
     }
-  }
-
-  ngOnInit() {
   }
   // add back when alpha.4 is out
   // navigate(item) {

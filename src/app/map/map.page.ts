@@ -10,7 +10,7 @@ declare const google;
   templateUrl: './map.page.html',
   styleUrls: ['./map.page.scss'],
 })
-export class MapPage implements OnInit {
+export class MapPage {
 
   @ViewChild('map') mapElement: { nativeElement: Element; };
   startMarker: google.maps.Marker = new google.maps.Marker({ icon: 'http://www.google.com/mapfiles/markerA.png' });
@@ -25,7 +25,7 @@ export class MapPage implements OnInit {
 
   constructor(private toastService: ToastService, private alertController: AlertController, private tripService: TripService) { }
 
-  ngOnInit() {
+  ionViewWillEnter() {
     this.initMap();
   }
 

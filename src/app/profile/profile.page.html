@@ -8,7 +8,6 @@
 </ion-header>
 
 <ion-content *ngIf="!isLoading">
-  <pre>{{user | json}}</pre>
   <form>
     <ion-item>
       <ion-label position="floating">Email</ion-label>
@@ -21,6 +20,10 @@
     <ion-item>
       <ion-label position="floating">Last Name</ion-label>
       <ion-input type="text" disabled="true" [value]="user.lastName"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Mobile Number</ion-label>
+      <ion-input type="text" disabled="true" [value]="user.mobileNumber"></ion-input>
     </ion-item>
   </form>
 </ion-content>
