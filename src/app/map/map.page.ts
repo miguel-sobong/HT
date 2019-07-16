@@ -1,9 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { ToastService } from '../core/services/toast/toast.service';
 import { TripService } from '../core/services/trip/trip.service';
-
-declare const google;
+declare const google: any;
 
 @Component({
   selector: 'app-map',
@@ -13,9 +12,9 @@ declare const google;
 export class MapPage {
 
   @ViewChild('map') mapElement: { nativeElement: Element; };
-  startMarker: google.maps.Marker = new google.maps.Marker({ icon: 'http://www.google.com/mapfiles/markerA.png' });
-  endMarker: google.maps.Marker = new google.maps.Marker({ icon: 'http://www.google.com/mapfiles/markerZ.png' });
-  map: google.maps.Map;
+  startMarker: any;
+  endMarker: any;
+  map: any;
   settingStartMarker = true;
   directionsService = new google.maps.DirectionsService();
   directionsDisplay = new google.maps.DirectionsRenderer();
@@ -105,7 +104,7 @@ export class MapPage {
 
     const coords = new google.maps.LatLng(9.3068, 123.3054); // replace to current location in the future
 
-    const mapOptions: google.maps.MapOptions = {
+    const mapOptions = {
       center: coords,
       zoom: 11,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -121,6 +120,9 @@ export class MapPage {
   }
 
   initMapMarkers() {
+    this.startMarker = new google.maps.Marker({ icon: 'http://www.google.com/mapfiles/markerA.png' });
+    this.endMarker = new google.maps.Marker({ icon: 'http://www.google.com/mapfiles/markerZ.png' });
+
     this.startMarker.setMap(this.map);
     this.endMarker.setMap(this.map);
 
