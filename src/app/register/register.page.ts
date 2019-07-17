@@ -8,13 +8,13 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
 })
-export class RegisterPage {
+export class RegisterPage  implements OnInit {
 
   registerForm: FormGroup;
 
   constructor(private userService: UserService, private formbuilder: FormBuilder, private authService: AuthService) { }
 
-  ionViewWillEnter() {
+  ngOnInit(): void {
     this.initForm();
   }
 
