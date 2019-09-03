@@ -1,17 +1,16 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { ToastService } from '../core/services/toast/toast.service';
-import { TripService } from '../core/services/trip/trip.service';
+import { ToastService } from '../../core/services/toast/toast.service';
+import { TripService } from '../../core/services/trip/trip.service';
 declare const google: any;
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.page.html',
-  styleUrls: ['./map.page.scss'],
+  styleUrls: ['./map.page.scss']
 })
-export class MapPage {
-
-  @ViewChild('map') mapElement: { nativeElement: Element; };
+export class MapPage implements OnInit {
+  @ViewChild('map') mapElement: { nativeElement: Element };
   startMarker: any;
   endMarker: any;
   map: any;
@@ -22,9 +21,13 @@ export class MapPage {
   @ViewChild('searchbar') searchBar: any;
   searchResults: any[] = [];
 
-  constructor(private toastService: ToastService, private alertController: AlertController, private tripService: TripService) { }
+  constructor(
+    private toastService: ToastService,
+    private alertController: AlertController,
+    private tripService: TripService
+  ) {}
 
-  ionViewWillEnter() {
+  ngOnInit(): void {
     this.initMap();
   }
 
@@ -38,12 +41,12 @@ export class MapPage {
     const autocompleteService = new google.maps.places.AutocompleteService();
     const options = {
       input: searchText,
-      componentRestrictions: { country: 'ph' },
+      componentRestrictions: { country: 'ph' }
     };
 
     autocompleteService.getPlacePredictions(options, (predictions, status) => {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
-        predictions.forEach((prediction) => {
+        predictions.forEach(prediction => {
           this.searchResults.push(prediction);
         });
       }
@@ -94,14 +97,12 @@ export class MapPage {
     });
   }
 
-
   clearSearchQueryAndResults() {
     this.searchResults = [];
     this.searchBar._value = this.searchBar.el.value = '';
   }
 
   initMap() {
-
     const coords = new google.maps.LatLng(9.3068, 123.3054); // replace to current location in the future
 
     const mapOptions = {
@@ -116,12 +117,15 @@ export class MapPage {
     this.directionsDisplay.setOptions({ suppressMarkers: true });
 
     this.initMapMarkers();
-
   }
 
   initMapMarkers() {
-    this.startMarker = new google.maps.Marker({ icon: 'http://www.google.com/mapfiles/markerA.png' });
-    this.endMarker = new google.maps.Marker({ icon: 'http://www.google.com/mapfiles/markerZ.png' });
+    this.startMarker = new google.maps.Marker({
+      icon: 'http://www.google.com/mapfiles/markerA.png'
+    });
+    this.endMarker = new google.maps.Marker({
+      icon: 'http://www.google.com/mapfiles/markerZ.png'
+    });
 
     this.startMarker.setMap(this.map);
     this.endMarker.setMap(this.map);
@@ -163,10 +167,16 @@ export class MapPage {
             }
 
             // add to firebase
-            this.tripService.createTrip(data, this.startMarker.getPosition().toJSON(), this.endMarker.getPosition().toJSON()).then(() => {
-              this.startMarker.setPosition(null);
-              this.endMarker.setPosition(null);
-            });
+            this.tripService
+              .createTrip(
+                data,
+                this.startMarker.getPosition().toJSON(),
+                this.endMarker.getPosition().toJSON()
+              )
+              .then(() => {
+                this.startMarker.setPosition(null);
+                this.endMarker.setPosition(null);
+              });
           }
         }
       ]

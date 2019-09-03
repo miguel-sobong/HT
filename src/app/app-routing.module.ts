@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-{ path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   {
     path: 'login',
     loadChildren: './login/login.module#LoginPageModule'
@@ -14,28 +14,28 @@ const routes: Routes = [
   },
   {
     path: 'map',
-    loadChildren: './map/map.module#MapPageModule',
-    canActivate: [AuthGuard],
+    loadChildren: './commuter/map/map.module#MapPageModule',
+    canActivate: [AuthGuard]
   },
   {
     path: 'home',
-    loadChildren: './home/home.module#HomePageModule',
-    canActivate: [AuthGuard],
+    loadChildren: './commuter/home/home.module#HomePageModule',
+    canActivate: [AuthGuard]
   },
   {
     path: 'list',
     loadChildren: './list/list.module#ListPageModule',
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard]
   },
   {
     path: 'profile',
-    loadChildren: './profile/profile.module#ProfilePageModule',
-    canActivate: [AuthGuard],
+    loadChildren: './commuter/profile/profile.module#ProfilePageModule',
+    canActivate: [AuthGuard]
   },
   {
     path: 'about',
     loadChildren: './about/about.module#AboutPageModule',
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard]
   }
 ];
 
@@ -46,4 +46,4 @@ const routes: Routes = [
   exports: [RouterModule],
   providers: [AuthGuard]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

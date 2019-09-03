@@ -1,19 +1,22 @@
-import { TripService } from './../core/services/trip/trip.service';
+import { TripService } from '../../core/services/trip/trip.service';
 import { NavController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../core/services/user/user.service';
-import { ILocation } from '../core/interfaces/ILocation';
-import { Trip } from '../core/models/trip';
+import { UserService } from '../../core/services/user/user.service';
+import { TripWithUser } from '../../core/models/trip';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
-  styleUrls: ['./home.page.scss'],
+  styleUrls: ['./home.page.scss']
 })
 export class HomePage implements OnInit {
   addTrip = false;
-  trips: Trip[];
-  constructor(private tripService: TripService, private userService: UserService, private navController: NavController) { }
+  tripsWithUser: TripWithUser[];
+  constructor(
+    private tripService: TripService,
+    private userService: UserService,
+    private navController: NavController
+  ) {}
   ngOnInit() {
     this.getTrips();
   }
@@ -25,12 +28,13 @@ export class HomePage implements OnInit {
         promises.push(this.getUserFromTrip(trip));
       });
       Promise.all(promises).then(trips => {
-        this.trips = trips;
+        this.tripsWithUser = trips;
       });
     });
   }
-  async getUserFromTrip(trip: Trip) {
-    const user = await this.userService.getUser(trip.commuterId);
+  async getUserFromTrip(trip: TripWithUser) {
+    const userWithTrip = await this.userService.getUser(trip.commuterId);
+    const { trips, ...user } = userWithTrip;
     return Promise.resolve({ ...trip, ...user });
   }
 
@@ -38,4 +42,3 @@ export class HomePage implements OnInit {
     this.navController.navigateForward('map');
   }
 }
-
