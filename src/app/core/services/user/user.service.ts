@@ -13,8 +13,8 @@ export class UserService {
   constructor(
     private afa: AngularFireAuth,
     private afd: AngularFireDatabase,
-    private toast: ToastService,
-  ) { }
+    private toast: ToastService
+  ) {}
 
   createCommuter(form: IRegisterForm) {
     this.createOnAngularFireAuth(form).then(user => {
@@ -34,26 +34,39 @@ export class UserService {
   }
 
   createOnAngularFireAuth(form: IRegisterForm) {
-    return this.afa.auth.createUserWithEmailAndPassword(form.email, form.password).then(user => {
-      return Promise.resolve(user);
-    }).catch(error => {
-      let message: string;
-      switch (error.code) {
-        case 'auth/invalid-email': message = `Email ${form.email} has an invalid format`; break;
-        case 'auth/email-already-in-use': message = `Email ${form.email} is already taken`; break;
-        case 'auth/weak-password': message = `Password is not strong enough`; break;
-        default: message = error.message;
-      }
-      this.toast.fail(message);
-      return Promise.reject(error);
-    });
+    return this.afa.auth
+      .createUserWithEmailAndPassword(form.email, form.password)
+      .then(user => {
+        return Promise.resolve(user);
+      })
+      .catch(error => {
+        let message: string;
+        switch (error.code) {
+          case 'auth/invalid-email':
+            message = `Email ${form.email} has an invalid format`;
+            break;
+          case 'auth/email-already-in-use':
+            message = `Email ${form.email} is already taken`;
+            break;
+          case 'auth/weak-password':
+            message = `Password is not strong enough`;
+            break;
+          default:
+            message = error.message;
+        }
+        this.toast.fail(message);
+        return Promise.reject(error);
+      });
   }
 
   async getUserType() {
     const uid = await this.afa.auth.currentUser.uid;
-    return await this.afd.object(`users/${uid}`).valueChanges().subscribe(user => {
-      return Promise.resolve(user);
-    });
+    return await this.afd
+      .object(`users/${uid}`)
+      .valueChanges()
+      .subscribe(user => {
+        return Promise.resolve(user);
+      });
   }
 
   logoutUser() {
@@ -62,8 +75,21 @@ export class UserService {
   }
 
   async getUser(userId: string) {
-    return await firebase.database().ref(`users/${userId}`).once('value').then(user => {
-      return Promise.resolve({ ...user.val(), id: userId });
-    });
+    return await firebase
+      .database()
+      .ref(`users/${userId}`)
+      .once('value')
+      .then(user => {
+        return Promise.resolve({ ...user.val(), id: userId });
+      });
+  }
+
+  async changeMobileNumber(userId: string, mobileNumber: string) {
+    return await firebase
+      .database()
+      .ref(`users/${userId}`)
+      .update({
+        mobileNumber
+      });
   }
 }

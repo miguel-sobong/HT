@@ -14,5 +14,7 @@ export class TripWithUser extends Trip {
   lastName: string;
   mobileNumber: string;
   userType: 'commuter' | 'driver';
+  endLocationAddress: string;
+  startLocationAddress: string;
   id: string;
 }

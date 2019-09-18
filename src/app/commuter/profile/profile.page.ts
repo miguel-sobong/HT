@@ -2,8 +2,8 @@ import { Commuter } from '../../core/models/user';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserService } from '../../core/services/user/user.service';
 import { AuthService } from '../../core/services/auth/auth.service';
-import { Component, OnInit } from '@angular/core';
-import { LoadingController } from '@ionic/angular';
+import { Component } from '@angular/core';
+import { LoadingController, AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-profile',
@@ -18,7 +18,8 @@ export class ProfilePage {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private userService: UserService,
-    private loadingController: LoadingController
+    private loadingController: LoadingController,
+    public alertController: AlertController
   ) {}
 
   ionViewWillEnter() {
@@ -54,5 +55,36 @@ export class ProfilePage {
             this.isLoading = false;
           });
       });
+  }
+
+  async changeNumber() {
+    const alert = await this.alertController.create({
+      header: 'Change Mobile Number',
+      inputs: [
+        {
+          name: 'mobileNumber',
+          value: this.user.mobileNumber
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary'
+        },
+        {
+          text: 'Change',
+          handler: data => {
+            const user = this.authService.getCurrentUser();
+            this.userService
+              .changeMobileNumber(user.uid, data.mobileNumber)
+              .then(() => {
+                this.getUser();
+              });
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 }

@@ -23,8 +23,8 @@ export class HomePage implements OnInit {
   getTrips() {
     const promises: Promise<any>[] = [];
     // tslint:disable-next-line:variable-name
-    this.tripService.getCommuterTrips().then(_trips => {
-      _trips.map(trip => {
+    this.tripService.getCommuterTrips().then(commuterTrips => {
+      commuterTrips.map(trip => {
         promises.push(this.getUserFromTrip(trip));
       });
       Promise.all(promises).then(trips => {
@@ -34,6 +34,7 @@ export class HomePage implements OnInit {
   }
   async getUserFromTrip(trip: TripWithUser) {
     const userWithTrip = await this.userService.getUser(trip.commuterId);
+
     const { trips, ...user } = userWithTrip;
     return Promise.resolve({ ...trip, ...user });
   }
