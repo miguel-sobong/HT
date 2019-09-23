@@ -17,7 +17,8 @@ export class HomePage implements OnInit {
     private userService: UserService,
     private navController: NavController
   ) {}
-  ngOnInit() {
+  ngOnInit() {}
+  ionViewWillEnter() {
     this.getTrips();
   }
   getTrips() {
