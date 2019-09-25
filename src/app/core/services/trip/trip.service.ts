@@ -49,7 +49,7 @@ export class TripService {
         return Promise.resolve();
       })
       .catch(() => {
-        this.toaster.fail('Failed to creat trip');
+        this.toaster.fail('Failed to create trip');
         return Promise.reject();
       });
   }

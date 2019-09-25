@@ -3,7 +3,12 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserService } from '../../core/services/user/user.service';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { Component } from '@angular/core';
-import { LoadingController, AlertController } from '@ionic/angular';
+import {
+  LoadingController,
+  AlertController,
+  ModalController
+} from '@ionic/angular';
+import { ChangePasswordFormComponent } from '../change-password-form/change-password-form.component';
 
 @Component({
   selector: 'app-profile',
@@ -19,7 +24,8 @@ export class ProfilePage {
     private authService: AuthService,
     private userService: UserService,
     private loadingController: LoadingController,
-    public alertController: AlertController
+    public alertController: AlertController,
+    public modalController: ModalController
   ) {}
 
   ionViewWillEnter() {
@@ -86,5 +92,13 @@ export class ProfilePage {
       ]
     });
     alert.present();
+  }
+
+  async changePassword() {
+    const modal = await this.modalController.create({
+      component: ChangePasswordFormComponent
+    });
+
+    modal.present();
   }
 }

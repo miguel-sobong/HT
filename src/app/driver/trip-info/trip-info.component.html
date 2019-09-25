@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Trip Detail
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+    <ion-row>
+      <ion-text color="dark">
+        <b>First Name:</b> {{ trip.firstName }}
+      </ion-text>
+    </ion-row>
+    <ion-row>
+      <ion-text color="dark"> <b>Last Name:</b> {{ trip.lastName }} </ion-text>
+    </ion-row>
+    <ion-row>
+      <ion-text color="dark"> <b>Fare:</b> {{ trip.fare }} </ion-text>
+    </ion-row>
+    <ion-row>
+      <ion-text color="dark">
+        <b>Number of Passengers:</b> {{ trip.numberOfPassengers }}
+      </ion-text>
+    </ion-row>
+    <ion-row>
+      <ion-text color="dark">
+        <b> Start Location:</b> {{ trip.startLocationAddress }}
+      </ion-text>
+    </ion-row>
+    <ion-row>
+      <ion-text color="dark">
+        <b>End Location:</b> {{ trip.endLocationAddress }}
+      </ion-text>
+    </ion-row>
+  </ion-list>
+  <ion-button expand="block" type="button" (click)="goBack()">Back</ion-button>
+</ion-content>

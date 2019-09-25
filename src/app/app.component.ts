@@ -76,8 +76,8 @@ export class AppComponent {
               this.appPages = [
                 {
                   title: 'Trips',
-                  // component: 'TripRequestPage',
-                  icon: 'ios-timer'
+                  url: '/driver/home',
+                  icon: 'map'
                 },
                 {
                   title: 'Ongoing Trips',
@@ -94,10 +94,11 @@ export class AppComponent {
           }
         });
         this.navController.navigateRoot('/map');
-        this.isLoggedIn = true;
+        this.menuController.enable(true);
       } else {
         this.navController.navigateRoot('/login');
-        this.isLoggedIn = false;
+        this.menuController.enable(false);
+        this.menuController.close();
       }
     });
   }
@@ -115,7 +116,7 @@ export class AppComponent {
           text: 'Yes',
           handler: () => {
             this.authService.logout().then(() => {
-              this.menuController.close();
+              this.navController.navigateRoot('/login');
             });
           }
         }

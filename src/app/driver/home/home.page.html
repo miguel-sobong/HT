@@ -11,6 +11,7 @@
 <ion-content>
   <ion-list>
     <ion-item ion-fixed class="text-bold">
+      <ion-label> Name </ion-label>
       <ion-label> Fare </ion-label>
       <ion-label> # Of Passengers </ion-label>
       <ion-label> Start Location </ion-label>
@@ -18,16 +19,12 @@
     </ion-item>
   </ion-list>
   <ion-list>
-    <ion-item *ngFor="let trip of tripsWithUser">
+    <ion-item *ngFor="let trip of tripsWithUser" (click)="viewTripOnMap(trip)">
+      <ion-label> {{ trip.firstName }} {{ trip.lastName }}</ion-label>
       <ion-label> {{ trip.fare }} </ion-label>
       <ion-label> {{ trip.numberOfPassengers }} </ion-label>
       <ion-label> {{ trip.startLocationAddress }} </ion-label>
       <ion-label> {{ trip.endLocationAddress }} </ion-label>
     </ion-item>
   </ion-list>
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="goToMapPage()">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
 </ion-content>

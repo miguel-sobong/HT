@@ -23,11 +23,6 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'list',
-    loadChildren: './list/list.module#ListPageModule',
-    canActivate: [AuthGuard]
-  },
-  {
     path: 'profile',
     loadChildren: './commuter/profile/profile.module#ProfilePageModule',
     canActivate: [AuthGuard]
@@ -35,6 +30,11 @@ const routes: Routes = [
   {
     path: 'about',
     loadChildren: './about/about.module#AboutPageModule',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'driver/home',
+    loadChildren: './driver/home/home.module#HomePageModule',
     canActivate: [AuthGuard]
   }
 ];

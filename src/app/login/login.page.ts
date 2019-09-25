@@ -6,11 +6,14 @@ import { AuthService } from '../core/services/auth/auth.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
-  styleUrls: ['./login.page.scss'],
+  styleUrls: ['./login.page.scss']
 })
 export class LoginPage implements OnInit {
-
-  constructor(private formBuilder: FormBuilder, private navController: NavController, private authService: AuthService) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private navController: NavController,
+    private authService: AuthService
+  ) {}
 
   loginForm: FormGroup;
 
@@ -32,5 +35,4 @@ export class LoginPage implements OnInit {
   goToRegisterPage() {
     this.navController.navigateForward('/register');
   }
-
 }
