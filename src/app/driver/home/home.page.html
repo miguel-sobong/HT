@@ -4,7 +4,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      My Trips
+      Trips
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -19,7 +19,7 @@
     </ion-item>
   </ion-list>
   <ion-list>
-    <ion-item *ngFor="let trip of tripsWithUser" (click)="viewTripOnMap(trip)">
+    <ion-item *ngFor="let trip of trips" (click)="viewTripOnMap(trip)">
       <ion-label> {{ trip.firstName }} {{ trip.lastName }}</ion-label>
       <ion-label> {{ trip.fare }} </ion-label>
       <ion-label> {{ trip.numberOfPassengers }} </ion-label>

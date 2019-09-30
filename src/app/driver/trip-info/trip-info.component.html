@@ -37,6 +37,9 @@
       </ion-text>
     </ion-row>
   </ion-list>
-  <div id="map" #map></div>
+  <ion-col><div #map id="map"></div></ion-col>
+  <ion-button expand="block" type="button" (click)="acceptTrip()"
+    >Accept</ion-button
+  >
   <ion-button expand="block" type="button" (click)="goBack()">Back</ion-button>
 </ion-content>

@@ -6,6 +6,9 @@ export class Trip {
   fare: number;
   numberOfPassengers: number;
   startLocation: ILocation;
+  accepted: boolean;
+  started: boolean;
+  startedDate: string;
 }
 
 export class TripWithUser extends Trip {

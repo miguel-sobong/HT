@@ -36,6 +36,12 @@ const routes: Routes = [
     path: 'driver/home',
     loadChildren: './driver/home/home.module#HomePageModule',
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'driver/ongoing-trips',
+    loadChildren:
+      './driver/ongoing-trips/ongoing-trips.module#OngoingTripsModule',
+    canActivate: [AuthGuard]
   }
 ];
 

@@ -17,6 +17,7 @@ export class MapPage implements OnInit {
   settingStartMarker = true;
   directionsService = new google.maps.DirectionsService();
   directionsDisplay = new google.maps.DirectionsRenderer();
+  autocompleteService = new google.maps.places.AutocompleteService();
 
   @ViewChild('searchbar') searchBar: any;
   searchResults: any[] = [];
@@ -38,19 +39,21 @@ export class MapPage implements OnInit {
       return;
     }
 
-    const autocompleteService = new google.maps.places.AutocompleteService();
     const options = {
       input: searchText,
       componentRestrictions: { country: 'ph' }
     };
 
-    autocompleteService.getPlacePredictions(options, (predictions, status) => {
-      if (status === google.maps.places.PlacesServiceStatus.OK) {
-        predictions.forEach(prediction => {
-          this.searchResults.push(prediction);
-        });
+    this.autocompleteService.getPlacePredictions(
+      options,
+      (predictions, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          predictions.forEach(prediction => {
+            this.searchResults.push(prediction);
+          });
+        }
       }
-    });
+    );
   }
 
   goToLocation(placeId: string) {

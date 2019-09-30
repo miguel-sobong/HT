@@ -2,11 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TripWithUser } from 'src/app/core/models/trip';
 import { TripService } from 'src/app/core/services/trip/trip.service';
 import { UserService } from 'src/app/core/services/user/user.service';
-import {
-  NavController,
-  AlertController,
-  ModalController
-} from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { TripInfoComponent } from '../trip-info/trip-info.component';
 
 @Component({
@@ -17,6 +13,7 @@ import { TripInfoComponent } from '../trip-info/trip-info.component';
 export class HomePage implements OnInit {
   addTrip = false;
   tripsWithUser: TripWithUser[];
+  trips: any[] = [];
   constructor(
     private tripService: TripService,
     private userService: UserService,
@@ -24,18 +21,36 @@ export class HomePage implements OnInit {
   ) {}
   ngOnInit() {}
   ionViewWillEnter() {
-    this.getTrips();
+    this.getTripsWithUser();
+    this.getTripsUpdate();
   }
-  getTrips() {
-    const promises: Promise<any>[] = [];
+  ionViewWillLeave() {
+    this.tripService.getTripDbReference().off();
+  }
+  getTripsUpdate() {
+    this.tripService.getTripDbReference().on('child_changed', () => {
+      this.getTripsWithUser();
+    });
+  }
+  getTripsWithUser() {
+    this.trips = [];
     // tslint:disable-next-line:variable-name
-    this.tripService.getCommuterTrips().then(commuterTrips => {
-      commuterTrips.map(trip => {
-        promises.push(this.getUserFromTrip(trip));
-      });
-      Promise.all(promises).then(trips => {
-        this.tripsWithUser = trips;
-      });
+    this.tripService.getTrips().then(commuterTrips => {
+      for (const key in commuterTrips) {
+        if (!commuterTrips[key].accepted) {
+          if (commuterTrips.hasOwnProperty(key)) {
+            this.userService
+              .getUser(commuterTrips[key].commuterId)
+              .then(result => {
+                this.trips.push({
+                  ...commuterTrips[key],
+                  tripId: key,
+                  ...result
+                });
+              });
+          }
+        }
+      }
     });
   }
   async getUserFromTrip(trip: TripWithUser) {
@@ -45,16 +60,16 @@ export class HomePage implements OnInit {
     return Promise.resolve({ ...trip, ...user });
   }
 
-  viewTripOnMap(trip: TripWithUser) {
-    this.modalController
-      .create({
-        component: TripInfoComponent,
-        componentProps: {
-          trip
-        }
-      })
-      .then(result => {
-        result.present();
-      });
+  async viewTripOnMap(trip: TripWithUser) {
+    const modal = await this.modalController.create({
+      component: TripInfoComponent,
+      componentProps: {
+        trip
+      }
+    });
+    modal.onDidDismiss().then(() => {
+      this.getTripsWithUser();
+    });
+    modal.present();
   }
 }

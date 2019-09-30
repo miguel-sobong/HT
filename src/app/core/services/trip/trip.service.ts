@@ -5,6 +5,7 @@ import { IRequestDataForm } from '../../interfaces/IRequestDataForm';
 import { ILocation } from '../../interfaces/ILocation';
 import { ToastService } from '../toast/toast.service';
 import * as firebase from 'firebase';
+import { Trip } from '../../models/trip';
 declare const google: any;
 
 @Injectable({
@@ -40,7 +41,10 @@ export class TripService {
         startLocationAddress,
         fare: passengerForm.fare,
         numberOfPassengers: passengerForm.numberOfPassengers,
-        commuterId: user.uid
+        commuterId: user.uid,
+        accepted: false,
+        started: false,
+        startedAt: ''
       }),
       this.afd.list(`users/${user.uid}/trips`).push(id)
     ])
@@ -78,6 +82,52 @@ export class TripService {
         return Promise.all(promises).then(trips => {
           return Promise.resolve(trips);
         });
+      });
+  }
+
+  getTrips() {
+    return firebase
+      .database()
+      .ref(`trips`)
+      .once('value')
+      .then(result => {
+        return Promise.resolve(result.val() as Trip);
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
+
+  startTrip(tripId) {
+    return firebase
+      .database()
+      .ref(`trips/${tripId}`)
+      .once('value')
+      .then(result => {
+        return this.afd.object(`trips/${tripId}`).update({
+          started: true
+        });
+      });
+  }
+
+  getTripDbReference() {
+    return firebase.database().ref('trips');
+  }
+
+  acceptTrip(tripId, driverId) {
+    return firebase
+      .database()
+      .ref(`trips/${tripId}`)
+      .once('value')
+      .then(result => {
+        if (result.val().accepted) {
+          throw new Error('Trip is already accepted by another driver');
+        } else {
+          return this.afd.object(`trips/${tripId}`).update({
+            accepted: true,
+            driverId
+          });
+        }
       });
   }
 

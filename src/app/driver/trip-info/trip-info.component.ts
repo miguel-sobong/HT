@@ -1,6 +1,8 @@
+import { AuthService } from './../../core/services/auth/auth.service';
 import { ModalController } from '@ionic/angular';
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { TripWithUser } from 'src/app/core/models/trip';
+import { TripService } from 'src/app/core/services/trip/trip.service';
+import { ToastService } from 'src/app/core/services/toast/toast.service';
 declare const google: any;
 
 @Component({
@@ -9,14 +11,19 @@ declare const google: any;
   styleUrls: ['./trip-info.component.scss']
 })
 export class TripInfoComponent implements OnInit {
-  @Input() trip: TripWithUser;
+  @Input() trip: any;
   @ViewChild('map') mapElement: { nativeElement: Element };
   map: any;
   directionsDisplay = new google.maps.DirectionsRenderer();
   directionsService = new google.maps.DirectionsService();
   startMarker: any;
   endMarker: any;
-  constructor(private modalController: ModalController) {}
+  constructor(
+    private modalController: ModalController,
+    private tripService: TripService,
+    private toaster: ToastService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {}
   ionViewWillEnter() {
@@ -64,5 +71,17 @@ export class TripInfoComponent implements OnInit {
         this.directionsDisplay.setDirections(response);
       }
     });
+  }
+  acceptTrip() {
+    this.tripService
+      .acceptTrip(this.trip.tripId, this.authService.getCurrentUser().uid)
+      .then(result => {
+        this.goBack();
+        this.toaster.success('Accepted trip');
+      })
+      .catch(error => {
+        this.goBack();
+        this.toaster.fail(error.message);
+      });
   }
 }

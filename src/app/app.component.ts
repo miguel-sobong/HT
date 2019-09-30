@@ -69,6 +69,7 @@ export class AppComponent {
                   icon: 'information-circle'
                 }
               ];
+              this.navController.navigateRoot('/map');
               break;
             }
 
@@ -81,19 +82,14 @@ export class AppComponent {
                 },
                 {
                   title: 'Ongoing Trips',
-                  // component: 'OngoingPage',
+                  url: '/driver/ongoing-trips',
                   icon: 'car'
-                },
-                {
-                  title: 'Profile',
-                  // component: 'EditProfilePage',
-                  icon: 'ios-contact'
                 }
               ];
+              this.navController.navigateRoot('/driver/home');
             }
           }
         });
-        this.navController.navigateRoot('/map');
         this.menuController.enable(true);
       } else {
         this.navController.navigateRoot('/login');
