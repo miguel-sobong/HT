@@ -25,4 +25,5 @@ export class OngoingTripsPage implements OnInit {
       this.trips = commuterTrips.filter(x => x.state === TripState.Started);
     });
   }
+  reviewDriver(trip) {}
 }

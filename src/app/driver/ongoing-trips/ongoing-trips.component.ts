@@ -32,7 +32,9 @@ export class OngoingTripsComponent implements OnInit {
       for (const key in commuterTrips) {
         if (
           commuterTrips[key].accepted &&
-          commuterTrips[key].driverId === user.uid
+          commuterTrips[key].driverId === user.uid &&
+          (commuterTrips[key].state === TripState.Started ||
+            commuterTrips[key].state === TripState.New)
         ) {
           if (commuterTrips.hasOwnProperty(key)) {
             this.userService
@@ -61,5 +63,4 @@ export class OngoingTripsComponent implements OnInit {
       this.getTripsWithUser();
     });
   }
-  reviewDriver(trip) {}
 }

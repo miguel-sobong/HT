@@ -37,11 +37,6 @@
           (click)="endTrip(trip)"
           >End Trip</ion-button
         >
-        <ion-button
-          *ngIf="trip.state === tripStates.Finished"
-          (click)="reviewDriver(trip)"
-          >Rate</ion-button
-        >
       </ion-row>
     </ion-grid>
   </ion-item>
