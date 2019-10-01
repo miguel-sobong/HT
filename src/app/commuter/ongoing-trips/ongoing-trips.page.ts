@@ -22,7 +22,7 @@ export class OngoingTripsPage implements OnInit {
   getTrips() {
     // tslint:disable-next-line:variable-name
     this.tripService.getCommuterTrips().then((commuterTrips: Trip[]) => {
-      this.trips = commuterTrips.filter(x => x.state !== TripState.New);
+      this.trips = commuterTrips.filter(x => x.state === TripState.Started);
     });
   }
 }
