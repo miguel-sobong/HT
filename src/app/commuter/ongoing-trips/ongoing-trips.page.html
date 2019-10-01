@@ -27,21 +27,10 @@
         ><b>Fare:</b>&nbsp; <span>{{ trip.fare }}</span></ion-row
       >
       <ion-row>
-        <ion-button
-          *ngIf="trip.state === tripStates.New"
-          (click)="startTrip(trip)"
-          >Start Trip</ion-button
-        >
-        <ion-button
-          *ngIf="trip.state === tripStates.Started"
-          (click)="endTrip(trip)"
-          >End Trip</ion-button
-        >
-        <ion-button
-          *ngIf="trip.state === tripStates.Finished"
-          (click)="reviewDriver(trip)"
-          >Rate</ion-button
-        >
+        <b>State:</b>&nbsp;
+        <span>{{
+          trip.state === tripStates.Started ? 'Ongoing' : 'Finished'
+        }}</span>
       </ion-row>
     </ion-grid>
   </ion-item>

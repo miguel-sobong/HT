@@ -6,6 +6,7 @@ import { ILocation } from '../../interfaces/ILocation';
 import { ToastService } from '../toast/toast.service';
 import * as firebase from 'firebase';
 import { Trip } from '../../models/trip';
+import { TripState } from '../../enums/trip-state';
 declare const google: any;
 
 @Injectable({
@@ -43,7 +44,7 @@ export class TripService {
         numberOfPassengers: passengerForm.numberOfPassengers,
         commuterId: user.uid,
         accepted: false,
-        started: false,
+        state: TripState.New,
         startedAt: ''
       }),
       this.afd.list(`users/${user.uid}/trips`).push(id)
@@ -91,7 +92,7 @@ export class TripService {
       .ref(`trips`)
       .once('value')
       .then(result => {
-        return Promise.resolve(result.val() as Trip);
+        return Promise.resolve(result.val() as Trip[]);
       })
       .catch(error => {
         return Promise.reject(error);
@@ -105,7 +106,18 @@ export class TripService {
       .once('value')
       .then(result => {
         return this.afd.object(`trips/${tripId}`).update({
-          started: true
+          state: TripState.Started
+        });
+      });
+  }
+  endTrip(tripId) {
+    return firebase
+      .database()
+      .ref(`trips/${tripId}`)
+      .once('value')
+      .then(result => {
+        return this.afd.object(`trips/${tripId}`).update({
+          state: TripState.Finished
         });
       });
   }

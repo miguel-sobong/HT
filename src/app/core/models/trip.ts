@@ -1,4 +1,5 @@
 import { ILocation } from '../interfaces/ILocation';
+import { TripState } from '../enums/trip-state';
 
 export class Trip {
   commuterId: string;
@@ -7,8 +8,11 @@ export class Trip {
   numberOfPassengers: number;
   startLocation: ILocation;
   accepted: boolean;
-  started: boolean;
+  state: TripState;
   startedDate: string;
+  driverId: string;
+  endLocationAddress: string;
+  startLocationAddress: string;
 }
 
 export class TripWithUser extends Trip {
@@ -17,7 +21,5 @@ export class TripWithUser extends Trip {
   lastName: string;
   mobileNumber: string;
   userType: 'commuter' | 'driver';
-  endLocationAddress: string;
-  startLocationAddress: string;
   id: string;
 }

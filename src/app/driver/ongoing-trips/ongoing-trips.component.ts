@@ -1,3 +1,5 @@
+import { ToastService } from './../../core/services/toast/toast.service';
+import { TripState } from './../../core/enums/trip-state';
 import { AuthService } from './../../core/services/auth/auth.service';
 import { TripService } from 'src/app/core/services/trip/trip.service';
 import { Component, OnInit } from '@angular/core';
@@ -10,10 +12,12 @@ import { UserService } from 'src/app/core/services/user/user.service';
 })
 export class OngoingTripsComponent implements OnInit {
   trips: any[] = [];
+  tripStates = TripState;
   constructor(
     private tripService: TripService,
     private userService: UserService,
-    private authService: AuthService
+    private authService: AuthService,
+    private toaster: ToastService
   ) {}
 
   ngOnInit() {}
@@ -47,7 +51,15 @@ export class OngoingTripsComponent implements OnInit {
   }
   startTrip(trip) {
     this.tripService.startTrip(trip.tripId).then(() => {
+      this.toaster.success('Started trip');
       this.getTripsWithUser();
     });
   }
+  endTrip(trip) {
+    this.tripService.endTrip(trip.tripId).then(() => {
+      this.toaster.success('Ended trip');
+      this.getTripsWithUser();
+    });
+  }
+  reviewDriver(trip) {}
 }

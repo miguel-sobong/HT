@@ -1,7 +1,12 @@
+import { UserService } from './../../core/services/user/user.service';
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { ToastService } from '../../core/services/toast/toast.service';
 import { TripService } from '../../core/services/trip/trip.service';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
+import * as firebase from 'firebase';
+import { User } from 'src/app/core/models/user';
+import { TripState } from 'src/app/core/enums/trip-state';
 declare const google: any;
 
 @Component({
@@ -25,13 +30,57 @@ export class MapPage implements OnInit {
   constructor(
     private toastService: ToastService,
     private alertController: AlertController,
-    private tripService: TripService
+    private tripService: TripService,
+    private authService: AuthService,
+    private userService: UserService
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.initMap();
+    this.getTripUpdates();
   }
 
+  getTripUpdates() {
+    this.authService.authenticated().subscribe(authUser => {
+      if (authUser) {
+        this.userService.getUser(authUser.uid).then((user: User) => {
+          return firebase
+            .database()
+            .ref(`users/${user.id}/trips`)
+            .once('value')
+            .then(result => {
+              const trips = result.val();
+              for (const key in trips) {
+                if (trips.hasOwnProperty(key)) {
+                  firebase
+                    .database()
+                    .ref(`trips/${trips[key]}`)
+                    .on('child_changed', changes => {
+                      console.log(changes.key);
+                      if (changes.key === 'accepted') {
+                        if (changes.val()) {
+                          this.toastService.success('A trip has been accepted');
+                        }
+                      } else if (changes.key === 'state') {
+                        if (changes.val() === TripState.Started) {
+                          this.toastService.success('A trip has been started');
+                        } else if (changes.val() === TripState.Finished) {
+                          this.toastService.success('A trip has been finished');
+                        }
+                      }
+                    });
+                }
+              }
+            });
+        });
+      } else {
+        firebase
+          .database()
+          .ref(`users`)
+          .off();
+      }
+    });
+  }
   searchMap(ev: any) {
     const searchText = ev.target.value;
     this.searchResults = [];

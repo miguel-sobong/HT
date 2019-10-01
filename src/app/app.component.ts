@@ -59,6 +59,11 @@ export class AppComponent {
                   icon: 'home'
                 },
                 {
+                  title: 'Ongoing Trips',
+                  url: '/ongoing-trips',
+                  icon: 'car'
+                },
+                {
                   title: 'Profile',
                   url: '/profile',
                   icon: 'contact'
