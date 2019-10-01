@@ -41,6 +41,10 @@ export class MapPage implements OnInit {
   }
 
   getTripUpdates() {
+    firebase
+      .database()
+      .ref(`users`)
+      .off();
     this.authService.authenticated().subscribe(authUser => {
       if (authUser) {
         this.userService.getUser(authUser.uid).then((user: User) => {
@@ -56,7 +60,6 @@ export class MapPage implements OnInit {
                     .database()
                     .ref(`trips/${trips[key]}`)
                     .on('child_changed', changes => {
-                      console.log(changes.key);
                       if (changes.key === 'accepted') {
                         if (changes.val()) {
                           this.toastService.success('A trip has been accepted');
@@ -228,6 +231,7 @@ export class MapPage implements OnInit {
               .then(() => {
                 this.startMarker.setPosition(null);
                 this.endMarker.setPosition(null);
+                this.getTripUpdates();
               });
           }
         }
