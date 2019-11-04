@@ -1,3 +1,4 @@
+import { TripAcceptedComponent } from './../../common/trip-accepted/trip-accepted.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -21,6 +22,7 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [MapPage]
+  declarations: [MapPage, TripAcceptedComponent],
+  entryComponents: [TripAcceptedComponent]
 })
 export class MapPageModule {}

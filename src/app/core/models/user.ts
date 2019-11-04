@@ -9,8 +9,5 @@ export class User {
   firstName: string;
   lastName: string;
   userType: UserTypes;
-}
-
-export class Commuter extends User {
   mobileNumber: string;
 }

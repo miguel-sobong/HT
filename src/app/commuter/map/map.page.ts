@@ -1,12 +1,13 @@
 import { UserService } from './../../core/services/user/user.service';
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { ToastService } from '../../core/services/toast/toast.service';
 import { TripService } from '../../core/services/trip/trip.service';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import * as firebase from 'firebase';
 import { User } from 'src/app/core/models/user';
 import { TripState } from 'src/app/core/enums/trip-state';
+import { TripAcceptedComponent } from 'src/app/common/trip-accepted/trip-accepted.component';
 declare const google: any;
 
 @Component({
@@ -32,7 +33,8 @@ export class MapPage implements OnInit {
     private alertController: AlertController,
     private tripService: TripService,
     private authService: AuthService,
-    private userService: UserService
+    private userService: UserService,
+    private modalController: ModalController
   ) {}
 
   ngOnInit() {
@@ -59,10 +61,23 @@ export class MapPage implements OnInit {
                   firebase
                     .database()
                     .ref(`trips/${trips[key]}`)
-                    .on('child_changed', changes => {
+                    .on('child_changed', async changes => {
                       if (changes.key === 'accepted') {
                         if (changes.val()) {
-                          this.toastService.success('A trip has been accepted');
+                          // this.toastService.success('A trip has been accepted');
+                          const trip = await this.tripService.getTrip(
+                            trips[key]
+                          );
+
+                          const modal = await this.modalController.create({
+                            component: TripAcceptedComponent,
+                            componentProps: {
+                              trip
+                            },
+                            cssClass: 'trip-accepted'
+                          });
+
+                          modal.present();
                         }
                       } else if (changes.key === 'state') {
                         if (changes.val() === TripState.Started) {

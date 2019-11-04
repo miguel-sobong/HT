@@ -1,4 +1,4 @@
-import { Commuter } from '../../core/models/user';
+import { User } from '../../core/models/user';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserService } from '../../core/services/user/user.service';
 import { AuthService } from '../../core/services/auth/auth.service';
@@ -16,7 +16,7 @@ import { ChangePasswordFormComponent } from '../change-password-form/change-pass
   styleUrls: ['./profile.page.scss']
 })
 export class ProfilePage {
-  user: Commuter;
+  user: User;
   editProfileForm: FormGroup;
   isLoading = true;
   constructor(

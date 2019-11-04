@@ -187,4 +187,14 @@ export class TripService {
       }, delay);
     });
   }
+
+  getTrip(tripId: number) {
+    return firebase
+      .database()
+      .ref(`trips/${tripId}`)
+      .once('value')
+      .then(trip => {
+        return Promise.resolve(trip.val());
+      });
+  }
 }

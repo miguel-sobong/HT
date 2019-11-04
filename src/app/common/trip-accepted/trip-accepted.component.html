@@ -1,0 +1,42 @@
+<ion-grid *ngIf="!isLoading" style="text-align: center;">
+  <ion-row>
+    <ion-col align-self-center>
+      <h3>A driver has accepted your request</h3>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col align-self-center>
+      <ion-icon name="person"></ion-icon>
+      {{ driver.firstName }} {{ driver.lastName }}
+    </ion-col>
+  </ion-row>
+  <ion-row *ngIf="driver && driver.email && driver.email.length">
+    <ion-col align-self-center>
+      <ion-icon name="mail"></ion-icon>
+      {{ driver.email }}
+    </ion-col>
+  </ion-row>
+  <ion-row *ngIf="driver && driver.mobileNumber && driver.mobileNumber.length">
+    <ion-col align-self-center>
+      <ion-icon name="call"></ion-icon>
+      {{ driver.mobileNumber }}
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col align-self-center>
+      Start Location: {{ trip.startLocationAddress }}
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col align-self-center>
+      End Location: {{ trip.endLocationAddress }}
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col align-self-end>
+      <ion-button expand="block" (click)="dismiss()">
+        Ok
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-grid>
