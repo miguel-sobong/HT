@@ -13,6 +13,7 @@ export class Trip {
   driverId: string;
   endLocationAddress: string;
   startLocationAddress: string;
+  timestamp: Date;
 }
 
 export class TripWithUser extends Trip {

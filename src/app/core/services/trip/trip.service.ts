@@ -45,7 +45,8 @@ export class TripService {
         commuterId: user.uid,
         accepted: false,
         state: TripState.New,
-        startedAt: ''
+        startedAt: '',
+        timestamp: firebase.database.ServerValue.TIMESTAMP
       }),
       this.afd.list(`users/${user.uid}/trips`).push(id)
     ])
@@ -110,6 +111,7 @@ export class TripService {
         });
       });
   }
+
   endTrip(tripId) {
     return firebase
       .database()
@@ -134,12 +136,18 @@ export class TripService {
       .then(result => {
         if (result.val().accepted) {
           throw new Error('Trip is already accepted by another driver');
-        } else {
-          return this.afd.object(`trips/${tripId}`).update({
-            accepted: true,
-            driverId
-          });
         }
+
+        if (this.addMinutes(new Date(result.val().timestamp), 5) > new Date()) {
+          throw new Error(
+            'Trip is already more than 5 minutes since creation.'
+          );
+        }
+
+        return this.afd.object(`trips/${tripId}`).update({
+          accepted: true,
+          driverId
+        });
       });
   }
 
@@ -196,5 +204,9 @@ export class TripService {
       .then(trip => {
         return Promise.resolve(trip.val());
       });
+  }
+
+  addMinutes(date, minutes) {
+    return new Date(date.getTime() + minutes * 60000);
   }
 }
