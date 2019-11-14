@@ -138,15 +138,19 @@ export class TripService {
           throw new Error('Trip is already accepted by another driver');
         }
 
-        if (this.addMinutes(new Date(result.val().timestamp), 5) > new Date()) {
-          throw new Error(
-            'Trip is already more than 5 minutes since creation.'
-          );
-        }
+        this.getTime().then(currentDate => {
+          if (
+            this.addMinutes(new Date(result.val().timestamp), 5) > currentDate
+          ) {
+            throw new Error(
+              'Trip is already more than 5 minutes since creation.'
+            );
+          }
 
-        return this.afd.object(`trips/${tripId}`).update({
-          accepted: true,
-          driverId
+          return this.afd.object(`trips/${tripId}`).update({
+            accepted: true,
+            driverId
+          });
         });
       });
   }
@@ -208,5 +212,13 @@ export class TripService {
 
   addMinutes(date, minutes) {
     return new Date(date.getTime() + minutes * 60000);
+  }
+
+  getTime() {
+    return fetch('http://worldtimeapi.org/api/timezone/Asia/Manila')
+      .then(response => response.json())
+      .then(dateTime => {
+        return new Date(dateTime.dateTime);
+      });
   }
 }

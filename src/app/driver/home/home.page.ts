@@ -36,21 +36,31 @@ export class HomePage implements OnInit {
     this.trips = [];
     // tslint:disable-next-line:variable-name
     this.tripService.getTrips().then(commuterTrips => {
-      for (const key in commuterTrips) {
-        if (!commuterTrips[key].accepted) {
-          if (commuterTrips.hasOwnProperty(key)) {
-            this.userService
-              .getUser(commuterTrips[key].commuterId)
-              .then(result => {
-                this.trips.push({
-                  ...commuterTrips[key],
-                  tripId: key,
-                  ...result
+      this.tripService.getTime().then(currentDate => {
+        for (const key in commuterTrips) {
+          if (!commuterTrips[key].accepted) {
+            if (
+              this.tripService.addMinutes(
+                new Date(commuterTrips[key].timestamp),
+                5
+              ) > currentDate
+            ) {
+              continue;
+            }
+            if (commuterTrips.hasOwnProperty(key)) {
+              this.userService
+                .getUser(commuterTrips[key].commuterId)
+                .then(result => {
+                  this.trips.push({
+                    ...commuterTrips[key],
+                    tripId: key,
+                    ...result
+                  });
                 });
-              });
+            }
           }
         }
-      }
+      });
     });
   }
   async getUserFromTrip(trip: TripWithUser) {

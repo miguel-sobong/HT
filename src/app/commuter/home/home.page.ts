@@ -17,17 +17,21 @@ export class HomePage implements OnInit {
     private navController: NavController
   ) {}
   ngOnInit() {}
+
   ionViewWillEnter() {
     this.getTrips();
   }
+
   getTrips() {
     // tslint:disable-next-line:variable-name
-    this.tripService.getCommuterTrips().then((commuterTrips: Trip[]) => {
-      this.tripsWithUser = commuterTrips.filter(
-        x =>
-          x.state === TripState.New &&
-          this.tripService.addMinutes(new Date(x.timestamp), 5) > new Date()
-      );
+    this.tripService.getTime().then(currentDate => {
+      this.tripService.getCommuterTrips().then((commuterTrips: Trip[]) => {
+        this.tripsWithUser = commuterTrips.filter(
+          y =>
+            y.state === TripState.New &&
+            this.tripService.addMinutes(new Date(y.timestamp), 5) < currentDate
+        );
+      });
     });
   }
 
