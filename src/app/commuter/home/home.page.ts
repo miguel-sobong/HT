@@ -29,7 +29,7 @@ export class HomePage implements OnInit {
         this.tripsWithUser = commuterTrips.filter(
           y =>
             y.state === TripState.New &&
-            this.tripService.addMinutes(new Date(y.timestamp), 5) < currentDate
+            this.tripService.addMinutes(new Date(y.timestamp), 5) > currentDate
         );
       });
     });
