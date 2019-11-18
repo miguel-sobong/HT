@@ -43,7 +43,7 @@ export class HomePage implements OnInit {
               this.tripService.addMinutes(
                 new Date(commuterTrips[key].timestamp),
                 5
-              ) < currentDate
+              ) > currentDate
             ) {
               continue;
             }
