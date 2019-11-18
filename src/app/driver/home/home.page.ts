@@ -43,10 +43,11 @@ export class HomePage implements OnInit {
               this.tripService.addMinutes(
                 new Date(commuterTrips[key].timestamp),
                 5
-              ) > currentDate
+              ) < currentDate
             ) {
               continue;
             }
+
             if (commuterTrips.hasOwnProperty(key)) {
               this.userService
                 .getUser(commuterTrips[key].commuterId)

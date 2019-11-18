@@ -211,14 +211,14 @@ export class TripService {
   }
 
   addMinutes(date, minutes) {
-    return new Date(date.getTime() + minutes * 60000);
+    return new Date(date.getTime() + minutes * 60000).getTime();
   }
 
   getTime() {
     return fetch('http://worldtimeapi.org/api/timezone/Asia/Manila')
       .then(response => response.json())
       .then(dateTime => {
-        return new Date(dateTime.dateTime);
+        return new Date(dateTime.datetime).getTime();
       });
   }
 }
