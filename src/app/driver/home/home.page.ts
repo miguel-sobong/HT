@@ -79,7 +79,9 @@ export class HomePage implements OnInit {
       }
     });
     modal.onDidDismiss().then(() => {
-      this.getTripsWithUser();
+      console.log('test');
+      this.tripService.getTripDbReference().off();
+      this.ionViewWillEnter();
     });
     modal.present();
   }

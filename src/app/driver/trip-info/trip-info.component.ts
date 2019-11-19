@@ -73,11 +73,12 @@ export class TripInfoComponent implements OnInit {
     });
   }
   acceptTrip() {
-    this.tripService
+    console.log(this.trip.tripId);
+    return this.tripService
       .acceptTrip(this.trip.tripId, this.authService.getCurrentUser().uid)
       .then(result => {
-        this.goBack();
         this.toaster.success('Accepted trip');
+        this.goBack();
       })
       .catch(error => {
         this.goBack();
