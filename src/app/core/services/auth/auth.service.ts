@@ -19,7 +19,15 @@ export class AuthService {
   }
 
   login(form: ILoginForm) {
-    const { email, password } = form;
+    let { email } = form;
+    const { password } = form;
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (!emailRegex.test(email)) {
+      email = `${email}@htdriver.com`;
+    }
+
+    console.log(email, password);
+
     return this.afa.auth
       .signInWithEmailAndPassword(email, password)
       .then(user => {
