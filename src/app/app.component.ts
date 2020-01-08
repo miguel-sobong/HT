@@ -86,12 +86,13 @@ export class AppComponent {
                   icon: 'map'
                 },
                 {
-                  title: 'Ongoing Trips',
+                  title: 'Accepted Trips',
                   url: '/driver/ongoing-trips',
                   icon: 'car'
                 }
               ];
               this.navController.navigateRoot('/driver/home');
+              break;
             }
           }
         });

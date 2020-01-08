@@ -4,13 +4,23 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      Ongoing Trips
+      Accepted Trips
     </ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content>
   <ion-item *ngFor="let trip of trips">
     <ion-grid>
+      <ion-row>
+        <ion-text color="dark">
+          <b>First Name:</b> {{ trip.firstName }}
+        </ion-text>
+      </ion-row>
+      <ion-row>
+        <ion-text color="dark">
+          <b>Last Name:</b> {{ trip.lastName }}
+        </ion-text>
+      </ion-row>
       <ion-row
         ><b>Pick-up point:</b>&nbsp;
         <span>{{ trip.startLocationAddress }}</span></ion-row
