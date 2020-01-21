@@ -4,6 +4,7 @@ import { Trip } from 'src/app/core/models/trip';
 import { TripState } from 'src/app/core/enums/trip-state';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import * as firebase from 'firebase';
+import { ToastService } from 'src/app/core/services/toast/toast.service';
 
 @Component({
   selector: 'app-ongoing-trips',
@@ -13,7 +14,10 @@ import * as firebase from 'firebase';
 export class OngoingTripsPage implements OnInit {
   trips: Trip[] = [];
   tripStates = TripState;
-  constructor(private tripService: TripService) {}
+  constructor(
+    private tripService: TripService,
+    private toaster: ToastService
+  ) {}
 
   ngOnInit() {}
   ionViewWillEnter() {
@@ -26,4 +30,10 @@ export class OngoingTripsPage implements OnInit {
     });
   }
   reviewDriver(trip) {}
+  endTrip(trip) {
+    this.tripService.endTrip(trip.tripId).then(() => {
+      this.toaster.success('Ended trip');
+      this.getTrips();
+    });
+  }
 }

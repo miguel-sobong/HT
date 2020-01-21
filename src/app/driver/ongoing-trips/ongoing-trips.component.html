@@ -42,11 +42,6 @@
           (click)="startTrip(trip)"
           >Start Trip</ion-button
         >
-        <ion-button
-          *ngIf="trip.state === tripStates.Started"
-          (click)="endTrip(trip)"
-          >End Trip</ion-button
-        >
       </ion-row>
     </ion-grid>
   </ion-item>

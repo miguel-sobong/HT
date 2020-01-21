@@ -57,10 +57,4 @@ export class OngoingTripsComponent implements OnInit {
       this.getTripsWithUser();
     });
   }
-  endTrip(trip) {
-    this.tripService.endTrip(trip.tripId).then(() => {
-      this.toaster.success('Ended trip');
-      this.getTripsWithUser();
-    });
-  }
 }
