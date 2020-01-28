@@ -51,6 +51,11 @@ export class AppComponent {
         this.userService.getUser(authUser.uid).then((user: User) => {
           switch (user.userType) {
             case UserTypes.Commuter: {
+              if (!authUser.emailVerified) {
+                authUser.sendEmailVerification();
+                break;
+              }
+
               this.appPages = [
                 {
                   title: 'Map',
