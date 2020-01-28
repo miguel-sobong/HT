@@ -1,3 +1,5 @@
+import { DriverStatus } from '../enums/driver-status';
+
 export enum UserTypes {
   Commuter = 'commuter',
   Driver = 'driver'
@@ -10,4 +12,5 @@ export class User {
   lastName: string;
   userType: UserTypes;
   mobileNumber: string;
+  status: DriverStatus;
 }

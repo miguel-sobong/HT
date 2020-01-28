@@ -1,4 +1,5 @@
 import { User, UserTypes } from './core/models/user';
+import { DriverStatus } from './core/enums/driver-status';
 import { Component } from '@angular/core';
 
 import {
@@ -11,6 +12,8 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthService } from './core/services/auth/auth.service';
 import { UserService } from './core/services/user/user.service';
+import { ToastService } from './core/services/toast/toast.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
@@ -27,7 +30,8 @@ export class AppComponent {
     private navController: NavController,
     private menuController: MenuController,
     private alertController: AlertController,
-    private userService: UserService
+    private userService: UserService,
+    private toastService: ToastService
   ) {
     this.initializeApp();
   }
@@ -79,6 +83,14 @@ export class AppComponent {
             }
 
             case UserTypes.Driver: {
+              if (user.status === DriverStatus.Deactivated) {
+                this.authService.logout().then(() => {
+                  this.navController.navigateRoot('/login');
+                });
+                this.toastService.fail('Your account has been deactivated');
+                break;
+              }
+
               this.appPages = [
                 {
                   title: 'Trips',
