@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
 import { ToastService } from '../toast/toast.service';
 import { IRegisterForm } from '../../interfaces/IRegisterForm';
+import { User } from '../../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +30,9 @@ export class UserService {
       lastName: form.lastName,
       mobileNumber: form.mobileNumber,
       email: form.email,
-      userType: 'commuter'
+      userType: 'commuter',
+      canRequest: false,
+      lastRequestTime: ''
     });
   }
 
@@ -91,5 +94,12 @@ export class UserService {
       .update({
         mobileNumber
       });
+  }
+
+  async updateUser(userId: string, updateValue: Partial<User>) {
+    return await firebase
+      .database()
+      .ref(`users/${userId}`)
+      .update({ ...updateValue });
   }
 }

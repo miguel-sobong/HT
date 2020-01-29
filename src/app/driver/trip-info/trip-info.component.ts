@@ -73,7 +73,6 @@ export class TripInfoComponent implements OnInit {
     });
   }
   acceptTrip() {
-    console.log(this.trip.tripId);
     return this.tripService
       .acceptTrip(this.trip.tripId, this.authService.getCurrentUser().uid)
       .then(result => {

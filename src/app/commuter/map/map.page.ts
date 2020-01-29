@@ -27,6 +27,7 @@ export class MapPage implements OnInit {
 
   @ViewChild('searchbar') searchBar: any;
   searchResults: any[] = [];
+  userKey: string | undefined;
 
   constructor(
     private toastService: ToastService,
@@ -38,8 +39,18 @@ export class MapPage implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.getUser();
     this.initMap();
     this.getTripUpdates();
+  }
+
+  getUser() {
+    const subs = this.authService.authenticated().subscribe(authUser => {
+      if (authUser) {
+        this.userKey = authUser.uid;
+        subs.unsubscribe();
+      }
+    });
   }
 
   getTripUpdates() {
@@ -230,24 +241,57 @@ export class MapPage implements OnInit {
         },
         {
           text: 'Request',
-          handler: data => {
+          handler: async data => {
             if (!data.fare || !data.numberOfPassengers) {
               this.toastService.fail('Both fields are required');
               return;
             }
 
-            // add to firebase
-            this.tripService
-              .createTrip(
-                data,
-                this.startMarker.getPosition().toJSON(),
-                this.endMarker.getPosition().toJSON()
-              )
-              .then(() => {
-                this.startMarker.setPosition(null);
-                this.endMarker.setPosition(null);
-                this.getTripUpdates();
-              });
+            if (!this.userKey) {
+              return;
+            }
+
+            const user = await this.userService.getUser(this.userKey);
+
+            if (user) {
+              const time = await this.tripService.getTime();
+              if (
+                user.lastRequestTime >=
+                this.tripService.addMinutes(new Date(time), 5)
+              ) {
+                await this.userService.updateUser(this.userKey, {
+                  canRequest: true
+                });
+
+                user.canRequest = true;
+              }
+
+              if (!user.canRequest) {
+                return;
+              }
+            }
+
+            return Promise.all([
+              // add to firebase
+              this.tripService
+                .createTrip(
+                  data,
+                  this.startMarker.getPosition().toJSON(),
+                  this.endMarker.getPosition().toJSON()
+                )
+                .then(() => {
+                  this.startMarker.setPosition(null);
+                  this.endMarker.setPosition(null);
+                  this.getTripUpdates();
+                }),
+
+              this.tripService.getTime().then(y => {
+                this.userService.updateUser(this.userKey, {
+                  canRequest: false,
+                  lastRequestTime: y
+                });
+              })
+            ]);
           }
         }
       ]

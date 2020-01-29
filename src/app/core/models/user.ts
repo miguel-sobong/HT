@@ -13,4 +13,6 @@ export class User {
   userType: UserTypes;
   mobileNumber: string;
   status: DriverStatus;
+  canRequest: boolean;
+  lastRequestTime: number;
 }
