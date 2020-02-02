@@ -78,7 +78,10 @@ export class TripService {
                 .ref(`trips/${userTripObject[key]}`)
                 .once('value')
                 .then(commuterTrip => {
-                  return Promise.resolve(commuterTrip.val());
+                  return Promise.resolve({
+                    ...commuterTrip.val(),
+                    tripId: userTripObject[key]
+                  });
                 });
               promises.push(tempPromise);
             }

@@ -256,7 +256,7 @@ export class MapPage implements OnInit {
             if (user) {
               const time = await this.tripService.getTime();
               if (
-                user.lastRequestTime >=
+                user.lastRequestTime <
                 this.tripService.addMinutes(new Date(time), 5)
               ) {
                 await this.userService.updateUser(this.userKey, {
@@ -267,6 +267,8 @@ export class MapPage implements OnInit {
               }
 
               if (!user.canRequest) {
+                // tslint:disable-next-line: quotemark
+                this.toastService.fail("Can't request at this time.");
                 return;
               }
             }
