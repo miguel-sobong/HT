@@ -253,45 +253,43 @@ export class MapPage implements OnInit {
 
             const user = await this.userService.getUser(this.userKey);
             const time = await this.tripService.getTime();
+            console.log(
+              user.lastRequestTime,
+              this.tripService.addMinutes(new Date(time), 5)
+            );
 
-            if (user) {
-              if (!user.canRequest) {
-                if (
-                  user.lastRequestTime <
-                  this.tripService.addMinutes(new Date(time), 5)
-                ) {
-                  await this.userService.updateUser(this.userKey, {
-                    canRequest: true
-                  });
+            if (user && !user.canRequest) {
+              if (
+                this.tripService.addMinutes(new Date(user.lastRequestTime), 5) <
+                time
+              ) {
+                return Promise.all([
+                  // add to firebase
+                  this.tripService
+                    .createTrip(
+                      data,
+                      this.startMarker.getPosition().toJSON(),
+                      this.endMarker.getPosition().toJSON()
+                    )
+                    .then(() => {
+                      this.startMarker.setPosition(null);
+                      this.endMarker.setPosition(null);
+                      this.getTripUpdates();
+                    }),
 
-                  user.canRequest = true;
-                } else {
-                  // tslint:disable-next-line: quotemark
-                  this.toastService.fail("Can't request at this time.");
-                  return;
-                }
+                  this.userService.updateUser(this.userKey, {
+                    canRequest: false,
+                    lastRequestTime: time
+                  })
+                ]);
+              } else {
+                // tslint:disable-next-line: quotemark
+                this.toastService.fail(
+                  'Please wait for 5 mins since last requested until requesting again.'
+                );
+                return;
               }
             }
-
-            return Promise.all([
-              // add to firebase
-              this.tripService
-                .createTrip(
-                  data,
-                  this.startMarker.getPosition().toJSON(),
-                  this.endMarker.getPosition().toJSON()
-                )
-                .then(() => {
-                  this.startMarker.setPosition(null);
-                  this.endMarker.setPosition(null);
-                  this.getTripUpdates();
-                }),
-
-              this.userService.updateUser(this.userKey, {
-                canRequest: false,
-                lastRequestTime: time
-              })
-            ]);
           }
         }
       ]
