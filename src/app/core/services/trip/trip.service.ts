@@ -123,10 +123,20 @@ export class TripService {
       .database()
       .ref(`trips/${tripId}`)
       .once('value')
-      .then(result => {
-        return this.afd.object(`trips/${tripId}`).update({
-          state: TripState.Finished
-        });
+      .then(_result => {
+        const result = _result.val();
+        return Promise.all([
+          this.afd.object(`trips/${tripId}`).update({
+            state: TripState.Finished
+          }),
+
+          firebase
+            .database()
+            .ref(`users/${result.commuterId}`)
+            .update({
+              canRequest: true
+            })
+        ]);
       });
   }
 
