@@ -62,29 +62,32 @@ export class TripService {
 
   getCommuterTrips() {
     const user = this.authService.getCurrentUser();
-    return firebase
-      .database()
-      .ref(`users/${user.uid}/trips`)
-      .once('value')
-      .then(userTrips => {
-        const promises = [];
-        const userTripObject = userTrips.val();
-        for (const key in userTripObject) {
-          if (userTripObject.hasOwnProperty(key)) {
-            const tempPromise = firebase
-              .database()
-              .ref(`trips/${userTripObject[key]}`)
-              .once('value')
-              .then(commuterTrip => {
-                return Promise.resolve(commuterTrip.val());
-              });
-            promises.push(tempPromise);
+
+    if (user) {
+      return firebase
+        .database()
+        .ref(`users/${user.uid}/trips`)
+        .once('value')
+        .then(userTrips => {
+          const promises = [];
+          const userTripObject = userTrips.val();
+          for (const key in userTripObject) {
+            if (userTripObject.hasOwnProperty(key)) {
+              const tempPromise = firebase
+                .database()
+                .ref(`trips/${userTripObject[key]}`)
+                .once('value')
+                .then(commuterTrip => {
+                  return Promise.resolve(commuterTrip.val());
+                });
+              promises.push(tempPromise);
+            }
           }
-        }
-        return Promise.all(promises).then(trips => {
-          return Promise.resolve(trips);
+          return Promise.all(promises).then(trips => {
+            return Promise.resolve(trips);
+          });
         });
-      });
+    }
   }
 
   getTrips() {

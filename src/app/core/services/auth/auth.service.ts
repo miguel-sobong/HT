@@ -31,7 +31,6 @@ export class AuthService {
     return this.afa.auth
       .signInWithEmailAndPassword(email, password)
       .then(user => {
-        this.toast.success(`Logged in successfully as ${email}`);
         return Promise.resolve(user);
       })
       .catch(error => {

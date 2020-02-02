@@ -49,68 +49,89 @@ export class AppComponent {
     this.authService.authenticated().subscribe(authUser => {
       if (authUser) {
         this.userService.getUser(authUser.uid).then((user: User) => {
-          switch (user.userType) {
-            case UserTypes.Commuter: {
-              if (!authUser.emailVerified) {
-                authUser.sendEmailVerification();
+          if (user) {
+            let hasError = false;
+            switch (user.userType) {
+              case UserTypes.Commuter: {
+                if (!authUser.emailVerified) {
+                  hasError = true;
+                  authUser.sendEmailVerification();
+                  this.toastService.fail(
+                    'Your email is not verified. Verify it first'
+                  );
+                  break;
+                }
+
+                this.appPages = [
+                  {
+                    title: 'Map',
+                    url: '/map',
+                    icon: 'map'
+                  },
+                  {
+                    title: 'My Trips',
+                    url: '/home',
+                    icon: 'home'
+                  },
+                  {
+                    title: 'Ongoing Trips',
+                    url: '/ongoing-trips',
+                    icon: 'car'
+                  },
+                  {
+                    title: 'Profile',
+                    url: '/profile',
+                    icon: 'contact'
+                  },
+                  {
+                    title: 'About',
+                    url: '/about',
+                    icon: 'information-circle'
+                  }
+                ];
+                this.navController.navigateRoot('/map');
                 break;
               }
 
-              this.appPages = [
-                {
-                  title: 'Map',
-                  url: '/map',
-                  icon: 'map'
-                },
-                {
-                  title: 'My Trips',
-                  url: '/home',
-                  icon: 'home'
-                },
-                {
-                  title: 'Ongoing Trips',
-                  url: '/ongoing-trips',
-                  icon: 'car'
-                },
-                {
-                  title: 'Profile',
-                  url: '/profile',
-                  icon: 'contact'
-                },
-                {
-                  title: 'About',
-                  url: '/about',
-                  icon: 'information-circle'
+              case UserTypes.Driver: {
+                if (user.status === DriverStatus.Deactivated) {
+                  hasError = true;
+                  this.authService.logout().then(() => {
+                    this.navController.navigateRoot('/login');
+                    this.toastService.fail('Your account has been deactivated');
+                  });
+                  break;
                 }
-              ];
-              this.navController.navigateRoot('/map');
-              break;
-            }
 
-            case UserTypes.Driver: {
-              if (user.status === DriverStatus.Deactivated) {
-                this.authService.logout().then(() => {
-                  this.navController.navigateRoot('/login');
-                });
-                this.toastService.fail('Your account has been deactivated');
+                this.appPages = [
+                  {
+                    title: 'Trips',
+                    url: '/driver/home',
+                    icon: 'map'
+                  },
+                  {
+                    title: 'Accepted Trips',
+                    url: '/driver/ongoing-trips',
+                    icon: 'car'
+                  }
+                ];
+                this.navController.navigateRoot('/driver/home');
                 break;
               }
-
-              this.appPages = [
-                {
-                  title: 'Trips',
-                  url: '/driver/home',
-                  icon: 'map'
-                },
-                {
-                  title: 'Accepted Trips',
-                  url: '/driver/ongoing-trips',
-                  icon: 'car'
-                }
-              ];
-              this.navController.navigateRoot('/driver/home');
-              break;
             }
+
+            if (!hasError) {
+              this.toastService.success(
+                `Logged in successfully ${
+                  user && user.email ? `as ${user.email}` : ''
+                }`
+              );
+              return;
+            }
+
+            this.authService.logout().then(() => {
+              this.navController.navigateRoot('/login');
+            });
           }
         });
         this.menuController.enable(true);
