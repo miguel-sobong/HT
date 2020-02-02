@@ -252,25 +252,24 @@ export class MapPage implements OnInit {
             }
 
             const user = await this.userService.getUser(this.userKey);
+            const time = await this.tripService.getTime();
 
             if (user) {
-              const time = await this.tripService.getTime();
-              if (
-                !user.canRequest &&
-                user.lastRequestTime <
-                  this.tripService.addMinutes(new Date(time), 5)
-              ) {
-                await this.userService.updateUser(this.userKey, {
-                  canRequest: true
-                });
-
-                user.canRequest = true;
-              }
-
               if (!user.canRequest) {
-                // tslint:disable-next-line: quotemark
-                this.toastService.fail("Can't request at this time.");
-                return;
+                if (
+                  user.lastRequestTime <
+                  this.tripService.addMinutes(new Date(time), 5)
+                ) {
+                  await this.userService.updateUser(this.userKey, {
+                    canRequest: true
+                  });
+
+                  user.canRequest = true;
+                } else {
+                  // tslint:disable-next-line: quotemark
+                  this.toastService.fail("Can't request at this time.");
+                  return;
+                }
               }
             }
 
@@ -288,11 +287,9 @@ export class MapPage implements OnInit {
                   this.getTripUpdates();
                 }),
 
-              this.tripService.getTime().then(y => {
-                this.userService.updateUser(this.userKey, {
-                  canRequest: false,
-                  lastRequestTime: y
-                });
+              this.userService.updateUser(this.userKey, {
+                canRequest: false,
+                lastRequestTime: time
               })
             ]);
           }
