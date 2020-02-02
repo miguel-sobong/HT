@@ -256,8 +256,9 @@ export class MapPage implements OnInit {
             if (user) {
               const time = await this.tripService.getTime();
               if (
+                !user.canRequest &&
                 user.lastRequestTime <
-                this.tripService.addMinutes(new Date(time), 5)
+                  this.tripService.addMinutes(new Date(time), 5)
               ) {
                 await this.userService.updateUser(this.userKey, {
                   canRequest: true
