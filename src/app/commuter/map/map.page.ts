@@ -217,6 +217,28 @@ export class MapPage implements OnInit {
   }
 
   async addTravel() {
+    function requestTrip(data, time) {
+      return Promise.all([
+        // add to firebase
+        this.tripService
+          .createTrip(
+            data,
+            this.startMarker.getPosition().toJSON(),
+            this.endMarker.getPosition().toJSON()
+          )
+          .then(() => {
+            this.startMarker.setPosition(null);
+            this.endMarker.setPosition(null);
+            this.getTripUpdates();
+          }),
+
+        this.userService.updateUser(this.userKey, {
+          canRequest: false,
+          lastRequestTime: time
+        })
+      ]);
+    }
+
     const alert = await this.alertController.create({
       header: 'Travel Information',
       inputs: [
@@ -253,41 +275,25 @@ export class MapPage implements OnInit {
 
             const user = await this.userService.getUser(this.userKey);
             const time = await this.tripService.getTime();
-            console.log(
-              user.lastRequestTime,
-              this.tripService.addMinutes(new Date(time), 5)
-            );
 
-            if (user && !user.canRequest) {
-              if (
-                this.tripService.addMinutes(new Date(user.lastRequestTime), 5) <
-                time
-              ) {
-                return Promise.all([
-                  // add to firebase
-                  this.tripService
-                    .createTrip(
-                      data,
-                      this.startMarker.getPosition().toJSON(),
-                      this.endMarker.getPosition().toJSON()
-                    )
-                    .then(() => {
-                      this.startMarker.setPosition(null);
-                      this.endMarker.setPosition(null);
-                      this.getTripUpdates();
-                    }),
-
-                  this.userService.updateUser(this.userKey, {
-                    canRequest: false,
-                    lastRequestTime: time
-                  })
-                ]);
+            if (user) {
+              if (user.canRequest) {
+                await requestTrip(data, time);
               } else {
-                // tslint:disable-next-line: quotemark
-                this.toastService.fail(
-                  'Please wait for 5 mins since last requested until requesting again.'
-                );
-                return;
+                if (
+                  this.tripService.addMinutes(
+                    new Date(user.lastRequestTime),
+                    5
+                  ) < time
+                ) {
+                  await requestTrip(data, time);
+                } else {
+                  // tslint:disable-next-line: quotemark
+                  this.toastService.fail(
+                    'Please wait for 5 mins since last requested until requesting again.'
+                  );
+                  return;
+                }
               }
             }
           }
