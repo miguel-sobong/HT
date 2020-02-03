@@ -217,28 +217,6 @@ export class MapPage implements OnInit {
   }
 
   async addTravel() {
-    function requestTrip(data, time) {
-      return Promise.all([
-        // add to firebase
-        this.tripService
-          .createTrip(
-            data,
-            this.startMarker.getPosition().toJSON(),
-            this.endMarker.getPosition().toJSON()
-          )
-          .then(() => {
-            this.startMarker.setPosition(null);
-            this.endMarker.setPosition(null);
-            this.getTripUpdates();
-          }),
-
-        this.userService.updateUser(this.userKey, {
-          canRequest: false,
-          lastRequestTime: time
-        })
-      ]);
-    }
-
     const alert = await this.alertController.create({
       header: 'Travel Information',
       inputs: [
@@ -278,7 +256,7 @@ export class MapPage implements OnInit {
 
             if (user) {
               if (user.canRequest) {
-                await requestTrip(data, time);
+                await this.requestTrip(data, time);
               } else {
                 if (
                   this.tripService.addMinutes(
@@ -286,7 +264,7 @@ export class MapPage implements OnInit {
                     5
                   ) < time
                 ) {
-                  await requestTrip(data, time);
+                  await this.requestTrip(data, time);
                 } else {
                   // tslint:disable-next-line: quotemark
                   this.toastService.fail(
@@ -301,5 +279,27 @@ export class MapPage implements OnInit {
       ]
     });
     alert.present();
+  }
+
+  requestTrip(tripData, lastRequestTime) {
+    return Promise.all([
+      // add to firebase
+      this.tripService
+        .createTrip(
+          tripData,
+          this.startMarker.getPosition().toJSON(),
+          this.endMarker.getPosition().toJSON()
+        )
+        .then(() => {
+          this.startMarker.setPosition(null);
+          this.endMarker.setPosition(null);
+          this.getTripUpdates();
+        }),
+
+      this.userService.updateUser(this.userKey, {
+        canRequest: false,
+        lastRequestTime
+      })
+    ]);
   }
 }
