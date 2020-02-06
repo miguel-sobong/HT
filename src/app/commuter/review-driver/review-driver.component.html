@@ -1,0 +1,18 @@
+<form [formGroup]="reviewDriverForm" (submit)="submit()">
+  <ion-item>
+    <ion-label position="floating">
+      Review
+    </ion-label>
+    <ion-textarea formControlName="description" id="description"></ion-textarea>
+  </ion-item>
+  <ion-button
+    expand="block"
+    type="submit"
+    [disabled]="reviewDriverForm.invalid"
+  >
+    Submit
+  </ion-button>
+  <ion-button expand="block" color="light" (click)="cancel()">
+    Cancel
+  </ion-button>
+</form>

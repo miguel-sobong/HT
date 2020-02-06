@@ -46,7 +46,8 @@ export class TripService {
         accepted: false,
         state: TripState.New,
         startedAt: '',
-        timestamp: firebase.database.ServerValue.TIMESTAMP
+        timestamp: firebase.database.ServerValue.TIMESTAMP,
+        isReviewed: false
       }),
       this.afd.list(`users/${user.uid}/trips`).push(id)
     ])
@@ -240,5 +241,12 @@ export class TripService {
       .then(dateTime => {
         return new Date(dateTime.datetime).getTime();
       });
+  }
+
+  async editTrip(tripId: string, editValues: Partial<Trip>) {
+    return firebase
+      .database()
+      .ref(`trips/${tripId}`)
+      .update({ ...editValues });
   }
 }

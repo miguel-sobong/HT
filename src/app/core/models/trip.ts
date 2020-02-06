@@ -14,6 +14,8 @@ export class Trip {
   endLocationAddress: string;
   startLocationAddress: string;
   timestamp: Date;
+  tripId?: string;
+  isReviewed: boolean;
 }
 
 export class TripWithUser extends Trip {

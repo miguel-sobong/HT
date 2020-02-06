@@ -5,6 +5,8 @@ import { TripState } from 'src/app/core/enums/trip-state';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import * as firebase from 'firebase';
 import { ToastService } from 'src/app/core/services/toast/toast.service';
+import { NavController, ModalController } from '@ionic/angular';
+import { ReviewDriverComponent } from '../review-driver/review-driver.component';
 
 @Component({
   selector: 'app-ongoing-trips',
@@ -16,7 +18,9 @@ export class OngoingTripsPage implements OnInit {
   tripStates = TripState;
   constructor(
     private tripService: TripService,
-    private toaster: ToastService
+    private toaster: ToastService,
+
+    private modalController: ModalController
   ) {}
 
   ngOnInit() {}
@@ -26,10 +30,29 @@ export class OngoingTripsPage implements OnInit {
   getTrips() {
     // tslint:disable-next-line:variable-name
     this.tripService.getCommuterTrips().then((commuterTrips: Trip[]) => {
-      this.trips = commuterTrips.filter(x => x.state === TripState.Started);
+      this.trips = commuterTrips.filter(x => x.state !== TripState.New);
     });
   }
-  reviewDriver(trip) {}
+
+  async reviewDriver(trip: Trip) {
+    const jsonTrip = JSON.stringify(trip);
+
+    const modal = await this.modalController.create({
+      component: ReviewDriverComponent,
+      componentProps: {
+        jsonTrip
+      }
+    });
+
+    modal.onDidDismiss().then(reviewed => {
+      if (reviewed.data) {
+        trip.isReviewed = true;
+      }
+    });
+
+    await modal.present();
+  }
+
   endTrip(trip) {
     this.tripService.endTrip(trip.tripId).then(() => {
       this.toaster.success('Ended trip');
