@@ -30,7 +30,7 @@ export class OngoingTripsPage implements OnInit {
   getTrips() {
     // tslint:disable-next-line:variable-name
     this.tripService.getCommuterTrips().then((commuterTrips: Trip[]) => {
-      this.trips = commuterTrips.filter(x => x.state !== TripState.New);
+      this.trips = commuterTrips.filter(x => x.state === TripState.Started);
     });
   }
 
@@ -56,7 +56,8 @@ export class OngoingTripsPage implements OnInit {
   endTrip(trip) {
     this.tripService.endTrip(trip.tripId).then(() => {
       this.toaster.success('Ended trip');
-      this.getTrips();
+      trip.state = TripState.Finished;
+      this.reviewDriver(trip);
     });
   }
 }
