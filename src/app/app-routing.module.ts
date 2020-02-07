@@ -1,6 +1,9 @@
 import { AuthGuard } from './core/guards/auth.guard';
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { ReviewDriverComponent } from './commuter/review-driver/review-driver.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { IonicModule } from '@ionic/angular';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -59,9 +62,13 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
+    ReactiveFormsModule,
+    IonicModule
   ],
   exports: [RouterModule],
-  providers: [AuthGuard]
+  providers: [AuthGuard],
+  declarations: [ReviewDriverComponent],
+  entryComponents: [ReviewDriverComponent]
 })
 export class AppRoutingModule {}

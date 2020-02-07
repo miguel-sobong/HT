@@ -23,7 +23,6 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     ReactiveFormsModule
   ],
-  declarations: [OngoingTripsPage, ReviewDriverComponent],
-  entryComponents: [ReviewDriverComponent]
+  declarations: [OngoingTripsPage]
 })
 export class OngoingTripsPageModule {}

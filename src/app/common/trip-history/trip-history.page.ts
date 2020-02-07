@@ -40,6 +40,9 @@ export class TripHistoryPage implements OnInit {
   getTrips() {
     // tslint:disable-next-line:variable-name
     return this.tripService.getCommuterTrips().then((commuterTrips: Trip[]) => {
+      commuterTrips = commuterTrips.map(x => {
+        return { ...x, date: new Date(x.timestamp) };
+      });
       this.trips = commuterTrips.filter(x => x.state === TripState.Finished);
     });
   }

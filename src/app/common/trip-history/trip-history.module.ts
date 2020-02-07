@@ -6,7 +6,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { TripHistoryPage } from './trip-history.page';
-import { ReviewDriverComponent } from 'src/app/commuter/review-driver/review-driver.component';
 
 const routes: Routes = [
   {
@@ -22,7 +21,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [TripHistoryPage, ReviewDriverComponent],
-  entryComponents: [ReviewDriverComponent]
+  declarations: [TripHistoryPage]
 })
 export class TripHistoryPageModule {}
