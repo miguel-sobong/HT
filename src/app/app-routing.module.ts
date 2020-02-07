@@ -48,6 +48,12 @@ const routes: Routes = [
     loadChildren:
       './commuter/ongoing-trips/ongoing-trips.module#OngoingTripsPageModule',
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'trip-history',
+    loadChildren:
+      './common/trip-history/trip-history.module#TripHistoryPageModule',
+    canActivate: [AuthGuard]
   }
 ];
 

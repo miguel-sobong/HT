@@ -79,6 +79,11 @@ export class AppComponent {
                     icon: 'car'
                   },
                   {
+                    title: 'Trip History',
+                    url: '/trip-history',
+                    icon: 'albums'
+                  },
+                  {
                     title: 'Profile',
                     url: '/profile',
                     icon: 'contact'
@@ -113,6 +118,11 @@ export class AppComponent {
                     title: 'Accepted Trips',
                     url: '/driver/ongoing-trips',
                     icon: 'car'
+                  },
+                  {
+                    title: 'Trip History',
+                    url: '/trip-history',
+                    icon: 'albums'
                   }
                 ];
                 this.navController.navigateRoot('/driver/home');

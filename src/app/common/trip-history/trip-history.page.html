@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Trip History
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-item *ngFor="let trip of trips">
+    <ion-grid>
+      <ion-row>
+        <b>Pick-up point:</b>
+        &nbsp;
+        <span>{{ trip.startLocationAddress }}</span>
+      </ion-row>
+      <ion-row>
+        <b>Drop-off point:</b>
+        &nbsp;
+        <span>{{ trip.endLocationAddress }}</span>
+      </ion-row>
+      <ion-row>
+        <b>Passengers:</b>
+        &nbsp;
+        <span>{{ trip.numberOfPassengers }}</span>
+      </ion-row>
+      <ion-row>
+        <b>Fare:</b>
+        &nbsp;
+        <span>{{ trip.fare }}</span>
+      </ion-row>
+      <ion-row>
+        <b>State:</b>
+        &nbsp;
+        <span>
+          {{ trip.state === tripStates.Started ? 'Ongoing' : 'Finished' }}
+        </span>
+      </ion-row>
+      <ion-row>
+        <ion-button
+          *ngIf="trip.state === tripStates.Finished || user.userType === userTypes.Commuter"
+          (click)="reviewDriver(trip)"
+          [disabled]="trip.isReviewed"
+        >
+          Review Driver
+        </ion-button>
+      </ion-row>
+    </ion-grid>
+  </ion-item>
+</ion-content>
