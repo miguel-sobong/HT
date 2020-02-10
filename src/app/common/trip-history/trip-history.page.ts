@@ -7,6 +7,7 @@ import { ReviewDriverComponent } from 'src/app/commuter/review-driver/review-dri
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { UserService } from 'src/app/core/services/user/user.service';
 import { User, UserTypes } from 'src/app/core/models/user';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-trip-history',
@@ -44,6 +45,7 @@ export class TripHistoryPage implements OnInit {
         return { ...x, date: new Date(x.timestamp) };
       });
       this.trips = commuterTrips.filter(x => x.state === TripState.Finished);
+      this.trips = _.orderBy(this.trips, ['date'], ['desc']);
     });
   }
 

@@ -46,15 +46,6 @@
           End Trip
         </ion-button>
       </ion-row>
-      <ion-row>
-        <ion-button
-          *ngIf="trip.state === tripStates.Finished"
-          (click)="reviewDriver(trip)"
-          [disabled]="trip.isReviewed"
-        >
-          Review Driver
-        </ion-button>
-      </ion-row>
     </ion-grid>
   </ion-item>
 </ion-content>

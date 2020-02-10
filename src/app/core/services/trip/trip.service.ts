@@ -7,6 +7,7 @@ import { ToastService } from '../toast/toast.service';
 import * as firebase from 'firebase';
 import { Trip } from '../../models/trip';
 import { TripState } from '../../enums/trip-state';
+import { UserService } from '../user/user.service';
 declare const google: any;
 
 @Injectable({
@@ -146,34 +147,38 @@ export class TripService {
   }
 
   acceptTrip(tripId, driverId) {
-    return firebase
-      .database()
-      .ref(`trips/${tripId}`)
-      .once('value')
-      .then(result => {
-        if (result.val().accepted) {
-          throw new Error('Trip is already accepted by another driver');
-        }
+    return Promise.all([
+      firebase
+        .database()
+        .ref(`trips/${tripId}`)
+        .once('value')
+        .then(result => {
+          if (result.val().accepted) {
+            throw new Error('Trip is already accepted by another driver');
+          }
 
-        this.getTime()
-          .then(currentDate => {
-            if (
-              this.addMinutes(new Date(result.val().timestamp), 5) < currentDate
-            ) {
-              throw new Error(
-                'Trip is already more than 5 minutes since creation.'
-              );
-            }
+          this.getTime()
+            .then(currentDate => {
+              if (
+                this.addMinutes(new Date(result.val().timestamp), 5) <
+                currentDate
+              ) {
+                throw new Error(
+                  'Trip is already more than 5 minutes since creation.'
+                );
+              }
 
-            return this.afd.object(`trips/${tripId}`).update({
-              accepted: true,
-              driverId
+              return this.afd.object(`trips/${tripId}`).update({
+                accepted: true,
+                driverId
+              });
+            })
+            .catch(error => {
+              throw new Error(error.message);
             });
-          })
-          .catch(error => {
-            throw new Error(error.message);
-          });
-      });
+        }),
+      this.afd.list(`users/${driverId}/trips`).push(tripId)
+    ]);
   }
 
   getCommuterTripUpdates() {

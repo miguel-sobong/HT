@@ -26,30 +26,33 @@ export class OngoingTripsComponent implements OnInit {
   }
   getTripsWithUser() {
     const user = this.authService.getCurrentUser();
-    // tslint:disable-next-line:variable-name
-    this.tripService.getTrips().then(commuterTrips => {
-      this.trips = [];
-      for (const key in commuterTrips) {
-        if (
-          commuterTrips[key].accepted &&
-          commuterTrips[key].driverId === user.uid &&
-          (commuterTrips[key].state === TripState.Started ||
-            commuterTrips[key].state === TripState.New)
-        ) {
-          if (commuterTrips.hasOwnProperty(key)) {
-            this.userService
-              .getUser(commuterTrips[key].commuterId)
-              .then(result => {
-                this.trips.push({
-                  ...commuterTrips[key],
-                  tripId: key,
-                  ...result
+
+    if (user) {
+      // tslint:disable-next-line:variable-name
+      this.tripService.getTrips().then(commuterTrips => {
+        this.trips = [];
+        for (const key in commuterTrips) {
+          if (
+            commuterTrips[key].accepted &&
+            commuterTrips[key].driverId === user.uid &&
+            (commuterTrips[key].state === TripState.Started ||
+              commuterTrips[key].state === TripState.New)
+          ) {
+            if (commuterTrips.hasOwnProperty(key)) {
+              this.userService
+                .getUser(commuterTrips[key].commuterId)
+                .then(result => {
+                  this.trips.push({
+                    ...commuterTrips[key],
+                    tripId: key,
+                    ...result
+                  });
                 });
-              });
+            }
           }
         }
-      }
-    });
+      });
+    }
   }
   startTrip(trip) {
     this.tripService.startTrip(trip.tripId).then(() => {

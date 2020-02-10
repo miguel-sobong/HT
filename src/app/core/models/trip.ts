@@ -16,6 +16,7 @@ export class Trip {
   timestamp: Date;
   tripId?: string;
   isReviewed: boolean;
+  date: Date;
 }
 
 export class TripWithUser extends Trip {
