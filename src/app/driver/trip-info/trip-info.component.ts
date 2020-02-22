@@ -3,6 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { TripService } from 'src/app/core/services/trip/trip.service';
 import { ToastService } from 'src/app/core/services/toast/toast.service';
+import { MchService } from 'src/app/core/services/mch/mch.service';
 declare const google: any;
 
 @Component({
@@ -22,7 +23,8 @@ export class TripInfoComponent implements OnInit {
     private modalController: ModalController,
     private tripService: TripService,
     private toaster: ToastService,
-    private authService: AuthService
+    private authService: AuthService,
+    private mchService: MchService
   ) {}
 
   ngOnInit() {}
@@ -72,16 +74,28 @@ export class TripInfoComponent implements OnInit {
       }
     });
   }
-  acceptTrip() {
-    return this.tripService
-      .acceptTrip(this.trip.tripId, this.authService.getCurrentUser().uid)
-      .then(result => {
-        this.toaster.success('Accepted trip');
-        this.goBack();
-      })
-      .catch(error => {
-        this.goBack();
-        this.toaster.fail(error.message);
+  async acceptTrip() {
+    const currentUser = this.authService.getCurrentUser();
+
+    await this.mchService.getMCHS().then(mchs => {
+      mchs.forEach(mch => {
+        if (mch.driver !== currentUser.email) {
+          return;
+        }
+
+        this.tripService
+          .acceptTrip(this.trip.tripId, currentUser.uid)
+          .then(result => {
+            this.toaster.success('Accepted trip');
+            this.goBack();
+          })
+          .catch(error => {
+            this.goBack();
+            this.toaster.fail(error.message);
+          });
       });
+    });
+
+    this.toaster.fail('User is not assigned any MCH');
   }
 }
