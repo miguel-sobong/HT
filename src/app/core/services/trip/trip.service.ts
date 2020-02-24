@@ -8,6 +8,7 @@ import * as firebase from 'firebase';
 import { Trip } from '../../models/trip';
 import { TripState } from '../../enums/trip-state';
 import { UserService } from '../user/user.service';
+import { MCH } from '../mch/mch.service';
 declare const google: any;
 
 @Injectable({
@@ -146,7 +147,7 @@ export class TripService {
     return firebase.database().ref('trips');
   }
 
-  acceptTrip(tripId, driverId) {
+  acceptTrip(tripId: string, driverId: string, userMCH: MCH) {
     return Promise.all([
       firebase
         .database()
@@ -170,7 +171,8 @@ export class TripService {
 
               return this.afd.object(`trips/${tripId}`).update({
                 accepted: true,
-                driverId
+                driverId,
+                plateNo: userMCH.plateNo
               });
             })
             .catch(error => {

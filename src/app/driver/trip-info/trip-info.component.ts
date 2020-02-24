@@ -77,25 +77,23 @@ export class TripInfoComponent implements OnInit {
   async acceptTrip() {
     const currentUser = this.authService.getCurrentUser();
 
-    await this.mchService.getMCHS().then(mchs => {
-      mchs.forEach(mch => {
-        if (mch.driver !== currentUser.email) {
-          return;
-        }
+    const mchs = await this.mchService.getMCHS();
 
-        this.tripService
-          .acceptTrip(this.trip.tripId, currentUser.uid)
-          .then(result => {
-            this.toaster.success('Accepted trip');
-            this.goBack();
-          })
-          .catch(error => {
-            this.goBack();
-            this.toaster.fail(error.message);
-          });
+    const userMCH = mchs.find(mch => mch.driver === currentUser.email);
+
+    if (!userMCH) {
+      this.toaster.fail('User is not assigned any MCH');
+    }
+
+    this.tripService
+      .acceptTrip(this.trip.tripId, currentUser.uid, userMCH)
+      .then(result => {
+        this.toaster.success('Accepted trip');
+        this.goBack();
+      })
+      .catch(error => {
+        this.goBack();
+        this.toaster.fail(error.message);
       });
-    });
-
-    this.toaster.fail('User is not assigned any MCH');
   }
 }
