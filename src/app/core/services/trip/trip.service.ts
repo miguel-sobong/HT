@@ -172,7 +172,7 @@ export class TripService {
               return this.afd.object(`trips/${tripId}`).update({
                 accepted: true,
                 driverId,
-                plateNo: userMCH.plateNo
+                mchNumber: userMCH.key
               });
             })
             .catch(error => {

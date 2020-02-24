@@ -17,7 +17,7 @@ export class Trip {
   tripId?: string;
   isReviewed: boolean;
   date: Date;
-  plateNo?: string;
+  mchNumber?: string;
 }
 
 export class TripWithUser extends Trip {

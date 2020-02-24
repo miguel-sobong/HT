@@ -25,7 +25,6 @@ export class TripAcceptedComponent implements OnInit {
   async getDriverUserDetail() {
     this.isLoading = true;
     this.driver = await this.userService.getUser(this.trip.driverId);
-    console.log(this.driver);
     this.isLoading = false;
   }
 

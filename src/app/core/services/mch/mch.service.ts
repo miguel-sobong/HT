@@ -6,6 +6,7 @@ export class MCH {
   driver: string;
   operator: string;
   plateNo: string;
+  key: string;
 }
 
 @Injectable({
