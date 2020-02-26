@@ -31,7 +31,7 @@ export class UserService {
       mobileNumber: form.mobileNumber,
       email: form.email,
       userType: 'commuter',
-      canRequest: false,
+      canRequest: true,
       lastRequestTime: ''
     });
   }
